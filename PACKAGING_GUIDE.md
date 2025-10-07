@@ -2,7 +2,7 @@
 
 **Date:** October 7, 2025  
 **Status:** Production Ready for v0.1.0 Release  
-**Module:** `github.com/yashrahurikar/goagents`
+**Module:** `github.com/yashrahurikar23/goagents`
 
 ---
 
@@ -33,13 +33,13 @@ Your module is already initialized:
 
 ```bash
 # Already done - shown for reference
-module github.com/yashrahurikar/goagents
+module github.com/yashrahurikar23/goagents
 go 1.22.1
 ```
 
 **What this means:**
-- Package name: `github.com/yashrahurikar/goagents`
-- Users will import: `import "github.com/yashrahurikar/goagents/agent"`
+- Package name: `github.com/yashrahurikar23/goagents`
+- Users will import: `import "github.com/yashrahurikar23/goagents/agent"`
 
 ---
 
@@ -58,7 +58,7 @@ git add .
 git commit -m "Initial release: v0.1.0 - Core agents and LLM clients"
 
 # Add remote (if not already added)
-git remote add origin https://github.com/yashrahurikar/goagents.git
+git remote add origin https://github.com/yashrahurikar23/goagents.git
 
 # Push to GitHub
 git push -u origin main
@@ -80,7 +80,7 @@ git push origin v0.1.0
 
 **Why tags matter:**
 - Go modules use Git tags for versioning
-- Users can specify version: `go get github.com/yashrahurikar/goagents@v0.1.0`
+- Users can specify version: `go get github.com/yashrahurikar23/goagents@v0.1.0`
 - Enables semantic versioning (v0.1.0, v0.2.0, v1.0.0, etc.)
 
 ---
@@ -106,7 +106,7 @@ Production-ready AI agent framework with support for OpenAI, Ollama, and custom 
 ## 📦 Installation
 
 ```bash
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 ## 🚀 Quick Start
@@ -118,8 +118,8 @@ import (
     "context"
     "fmt"
     
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/openai"
 )
 
 func main() {
@@ -140,7 +140,7 @@ func main() {
 - [Getting Started](./docs/GETTING_STARTED.md)
 - [Agent Types](./docs/AGENTS.md)
 - [Examples](./examples/)
-- [API Reference](https://pkg.go.dev/github.com/yashrahurikar/goagents)
+- [API Reference](https://pkg.go.dev/github.com/yashrahurikar23/goagents)
 
 ## 📄 License
 
@@ -165,7 +165,7 @@ cat go.mod
 
 **Your go.mod will look like:**
 ```go
-module github.com/yashrahurikar/goagents
+module github.com/yashrahurikar23/goagents
 
 go 1.22.1
 
@@ -214,17 +214,17 @@ EOF
 **Step 1: Install the package**
 ```bash
 # In their Go project directory
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 **Step 2: Import in their code**
 ```go
 import (
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/openai"
-    "github.com/yashrahurikar/goagents/llm/ollama"
-    "github.com/yashrahurikar/goagents/tools"
-    "github.com/yashrahurikar/goagents/core"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/tools"
+    "github.com/yashrahurikar23/goagents/core"
 )
 ```
 
@@ -237,9 +237,9 @@ import (
     "fmt"
     "log"
     
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
-    "github.com/yashrahurikar/goagents/tools"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/tools"
 )
 
 func main() {
@@ -295,8 +295,8 @@ import (
     "os"
     "strings"
     
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
 )
 
 func main() {
@@ -373,9 +373,9 @@ import (
     "fmt"
     "log"
     
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/openai"
-    "github.com/yashrahurikar/goagents/tools"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/tools"
 )
 
 func main() {
@@ -435,7 +435,7 @@ git tag v0.2.0
 git push origin v0.2.0
 
 # Users can now use
-go get github.com/yashrahurikar/goagents@v0.2.0
+go get github.com/yashrahurikar23/goagents@v0.2.0
 ```
 
 ---
@@ -504,13 +504,13 @@ goagent/
 **Manual trigger:**
 ```bash
 # Visit this URL to force indexing
-https://pkg.go.dev/github.com/yashrahurikar/goagents@v0.1.0
+https://pkg.go.dev/github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 ### 2. Add Go Report Card Badge
 
 ```markdown
-[![Go Report Card](https://goreportcard.com/badge/github.com/yashrahurikar/goagents)](https://goreportcard.com/report/github.com/yashrahurikar/goagents)
+[![Go Report Card](https://goreportcard.com/badge/github.com/yashrahurikar23/goagents)](https://goreportcard.com/report/github.com/yashrahurikar23/goagents)
 ```
 
 ### 3. Create GitHub Topics
@@ -540,12 +540,12 @@ Add topics to your GitHub repo:
 
 ✅ **Easy Installation:**
 ```bash
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 ✅ **Clear Imports:**
 ```go
-import "github.com/yashrahurikar/goagents/agent"
+import "github.com/yashrahurikar23/goagents/agent"
 ```
 
 ✅ **Discoverable API:**
@@ -694,7 +694,7 @@ go install golang.org/x/tools/cmd/godoc@latest
 
 # Run locally
 godoc -http=:6060
-# Visit http://localhost:6060/pkg/github.com/yashrahurikar/goagents/
+# Visit http://localhost:6060/pkg/github.com/yashrahurikar23/goagents/
 ```
 
 ---
@@ -709,7 +709,7 @@ godoc -http=:6060
 
 1. Install Go (1.22+)
 2. Create new project: `go mod init myapp`
-3. Install GoAgent: `go get github.com/yashrahurikar/goagents@latest`
+3. Install GoAgent: `go get github.com/yashrahurikar23/goagents@latest`
 4. Copy this code to main.go:
    ```go
    // (working example)
@@ -810,10 +810,10 @@ git push origin main --tags
 
 ```bash
 # Install
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 
 # Use
-import "github.com/yashrahurikar/goagents/agent"
+import "github.com/yashrahurikar23/goagents/agent"
 ```
 
 **That's it! Your SDK is ready for users! 🎉**

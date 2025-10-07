@@ -11,7 +11,7 @@
 ### Test Coverage: **100.0%** 🎉
 
 ```
-ok    github.com/yashrahurikar/goagents/core   0.533s  coverage: 100.0% of statements
+ok    github.com/yashrahurikar23/goagents/core   0.533s  coverage: 100.0% of statements
 ```
 
 **Exceeded Goal:** Target was 90%+, achieved 100%!

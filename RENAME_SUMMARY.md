@@ -9,7 +9,7 @@
 
 ### What Changed
 - **Old:** `github.com/yashrahurikar/goagent`
-- **New:** `github.com/yashrahurikar/goagents` ⭐
+- **New:** `github.com/yashrahurikar23/goagents` ⭐
 
 ### Verification
 ```bash
@@ -28,21 +28,21 @@
 
 ### Installation
 ```bash
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 ### Usage
 ```go
-import "github.com/yashrahurikar/goagents/agent"
-import "github.com/yashrahurikar/goagents/llm/ollama"
-import "github.com/yashrahurikar/goagents/core"
+import "github.com/yashrahurikar23/goagents/agent"
+import "github.com/yashrahurikar23/goagents/llm/ollama"
+import "github.com/yashrahurikar23/goagents/core"
 ```
 
 ### URLs
 ```
-GitHub:   https://github.com/yashrahurikar/goagents
-Docs:     https://pkg.go.dev/github.com/yashrahurikar/goagents
-Install:  go get github.com/yashrahurikar/goagents@v0.1.0
+GitHub:   https://github.com/yashrahurikar23/goagents
+Docs:     https://pkg.go.dev/github.com/yashrahurikar23/goagents
+Install:  go get github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 ---
@@ -56,7 +56,7 @@ You can now proceed with the release:
 git add .
 git commit -m "Rename package: goagent → goagents
 
-- Update module path to github.com/yashrahurikar/goagents
+- Update module path to github.com/yashrahurikar23/goagents
 - Update all imports across codebase
 - Update all documentation
 - Plural better reflects multiple agent types (Function, ReAct, Conversational)"
@@ -84,7 +84,7 @@ git push origin v0.1.0
 mkdir /tmp/test-goagents
 cd /tmp/test-goagents
 go mod init test
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 ---
@@ -111,7 +111,7 @@ Production-ready AI agent framework for Go with support for multiple LLM provide
 ## 📊 Test Results
 
 ```
-Package: github.com/yashrahurikar/goagents
+Package: github.com/yashrahurikar23/goagents
 ├── core/             ✅ 42 tests passing
 ├── agent/            ✅ 43 tests passing  
 ├── llm/ollama/       ✅ 15 tests passing

@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/yashrahurikar/goagents/core"
+	"github.com/yashrahurikar23/goagents/core"
 )
 
 // ReActAgent implements the ReAct (Reasoning + Acting) pattern.

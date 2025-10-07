@@ -4,7 +4,7 @@
 
 ### Option 1: Convert Existing Private Repo to Public (Recommended if you already have a repo)
 
-1. Go to: https://github.com/yashrahurikar/goagents/settings
+1. Go to: https://github.com/yashrahurikar23/goagents/settings
 2. Scroll down to **"Danger Zone"**
 3. Click **"Change repository visibility"**
 4. Select **"Make public"**
@@ -25,7 +25,7 @@ Then push your code:
 cd /Users/yashrahurikar/yash/projects/tweeny/agentspace/goagent
 
 # If new repo, add remote
-git remote add origin https://github.com/yashrahurikar/goagents.git
+git remote add origin https://github.com/yashrahurikar23/goagents.git
 
 # Push code
 git push -u origin develop
@@ -484,7 +484,7 @@ After creating your repo:
 ☐ git push origin v0.1.0
 
 # 5. Verify
-☐ Test: go get github.com/yashrahurikar/goagents@v0.1.0
+☐ Test: go get github.com/yashrahurikar23/goagents@v0.1.0
 ☐ Check pkg.go.dev in 24 hours
 ```
 
@@ -493,7 +493,7 @@ After creating your repo:
 ## 🎯 Recommended Repository Structure
 
 ```
-github.com/yashrahurikar/goagents/
+github.com/yashrahurikar23/goagents/
 ├── .github/
 │   ├── workflows/
 │   │   ├── test.yml
@@ -528,10 +528,10 @@ github.com/yashrahurikar/goagents/
 ### 1. Add Badges to README
 ```markdown
 [![Go Version](https://img.shields.io/badge/Go-1.22%2B-00ADD8?style=flat&logo=go)](https://go.dev/)
-[![Tests](https://github.com/yashrahurikar/goagents/workflows/Tests/badge.svg)](https://github.com/yashrahurikar/goagents/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/yashrahurikar/goagents)](https://goreportcard.com/report/github.com/yashrahurikar/goagents)
+[![Tests](https://github.com/yashrahurikar23/goagents/workflows/Tests/badge.svg)](https://github.com/yashrahurikar23/goagents/actions)
+[![Go Report Card](https://goreportcard.com/badge/github.com/yashrahurikar23/goagents)](https://goreportcard.com/report/github.com/yashrahurikar23/goagents)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![pkg.go.dev](https://pkg.go.dev/badge/github.com/yashrahurikar/goagents.svg)](https://pkg.go.dev/github.com/yashrahurikar/goagents)
+[![pkg.go.dev](https://pkg.go.dev/badge/github.com/yashrahurikar23/goagents.svg)](https://pkg.go.dev/github.com/yashrahurikar23/goagents)
 ```
 
 ### 2. Create a GitHub Profile README
@@ -574,7 +574,7 @@ git push origin v0.1.0
 ---
 
 **Your repo will be ready for:**
-- ✅ Users to install: `go get github.com/yashrahurikar/goagents@v0.1.0`
+- ✅ Users to install: `go get github.com/yashrahurikar23/goagents@v0.1.0`
 - ✅ Contributors to submit PRs
 - ✅ Community to report issues
 - ✅ pkg.go.dev to index automatically

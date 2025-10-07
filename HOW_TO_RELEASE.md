@@ -74,7 +74,7 @@ git push origin --tags
 
 ### Step 5: Make Repository Public (1 minute)
 
-1. Go to: https://github.com/yashrahurikar/goagents/settings
+1. Go to: https://github.com/yashrahurikar23/goagents/settings
 2. Scroll to "Danger Zone"
 3. Click "Change repository visibility"
 4. Select "Make public"
@@ -83,7 +83,7 @@ git push origin --tags
 
 ### Step 6: Create GitHub Release (Optional but Recommended, 1 minute)
 
-1. Go to: https://github.com/yashrahurikar/goagents/releases/new
+1. Go to: https://github.com/yashrahurikar23/goagents/releases/new
 2. Choose tag: `v0.1.0`
 3. Release title: `v0.1.0 - Initial Release 🚀`
 4. Description: Copy from `RELEASE_v0.1.0.md`
@@ -96,7 +96,7 @@ git push origin --tags
 Users can immediately install it:
 
 ```bash
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 ---
@@ -114,7 +114,7 @@ cd /tmp/test-goagent
 go mod init example.com/test
 
 # Install your package
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 
 # Create test file
 cat > main.go << 'EOF'
@@ -123,8 +123,8 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
 )
 
 func main() {
@@ -146,13 +146,13 @@ go run main.go
 ## 📊 What Happens After You Push the Tag?
 
 ### Immediately (< 1 minute)
-- ✅ Users can `go get github.com/yashrahurikar/goagents@v0.1.0`
+- ✅ Users can `go get github.com/yashrahurikar23/goagents@v0.1.0`
 - ✅ Tag appears on GitHub releases page
 - ✅ Package is discoverable
 
 ### Within 24 Hours (Usually < 1 hour)
 - ✅ **pkg.go.dev** automatically indexes your package
-- ✅ Documentation appears at: https://pkg.go.dev/github.com/yashrahurikar/goagents
+- ✅ Documentation appears at: https://pkg.go.dev/github.com/yashrahurikar23/goagents
 - ✅ Search engines can find it
 
 ### No Action Required!
@@ -169,7 +169,7 @@ go run main.go
 
 ### Step 1: Install
 ```bash
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 ### Step 2: Import in Their Code
@@ -177,9 +177,9 @@ go get github.com/yashrahurikar/goagents@latest
 package main
 
 import (
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
-    "github.com/yashrahurikar/goagents/core"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/core"
 )
 ```
 
@@ -262,16 +262,16 @@ v2.0.0  # Breaking API changes
 
 ```bash
 # Latest patch version in 0.1.x
-go get github.com/yashrahurikar/goagents@v0.1
+go get github.com/yashrahurikar23/goagents@v0.1
 
 # Latest minor version in 0.x.x  
-go get github.com/yashrahurikar/goagents@v0
+go get github.com/yashrahurikar23/goagents@v0
 
 # Exact version
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 
 # Latest (including breaking changes)
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 ---
@@ -378,7 +378,7 @@ git push origin v0.1.0
 
 Within minutes, anyone can:
 ```bash
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 **No npm publish. No PyPI upload. Just git!** 🚀
@@ -387,7 +387,7 @@ go get github.com/yashrahurikar/goagents@v0.1.0
 
 ## 📞 Need Help?
 
-- **pkg.go.dev not showing?** Wait 24 hours or request indexing at: https://pkg.go.dev/github.com/yashrahurikar/goagents
+- **pkg.go.dev not showing?** Wait 24 hours or request indexing at: https://pkg.go.dev/github.com/yashrahurikar23/goagents
 - **Users can't install?** Check repo is public and tag exists: `git tag -l`
 - **Wrong version?** Delete and recreate tag (see FAQ above)
 

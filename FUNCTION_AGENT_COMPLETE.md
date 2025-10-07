@@ -62,7 +62,7 @@ agent.Reset()
 --- PASS: TestFunctionAgent_WithOptions (0.00s)
 ...
 PASS
-ok      github.com/yashrahurikar/goagents/agent  0.501s
+ok      github.com/yashrahurikar23/goagents/agent  0.501s
 ```
 
 ### 3. Core Type Extensions
@@ -148,9 +148,9 @@ import (
     "log"
     "os"
     
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/openai"
-    "github.com/yashrahurikar/goagents/tools"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/tools"
 )
 
 func main() {

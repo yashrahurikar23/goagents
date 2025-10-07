@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/yashrahurikar/goagents/core"
+	"github.com/yashrahurikar23/goagents/core"
 )
 
 // Calculator is a simple calculator tool that performs basic arithmetic operations

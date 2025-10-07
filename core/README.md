@@ -1,6 +1,6 @@
 # GoAgent Core Package
 
-**Package:** `github.com/yashrahurikar/goagents/core`
+**Package:** `github.com/yashrahurikar23/goagents/core`
 
 The core package provides fundamental types and interfaces for the GoAgent framework.
 
@@ -22,7 +22,7 @@ This package contains:
 ## Usage
 
 ```go
-import "github.com/yashrahurikar/goagents/core"
+import "github.com/yashrahurikar23/goagents/core"
 
 // Use interfaces to define dependencies
 func processWithLLM(llm core.LLM, prompt string) error {

@@ -101,4 +101,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-**Note:** This is the first public release. Please report any issues on [GitHub Issues](https://github.com/yashrahurikar/goagents/issues).
+**Note:** This is the first public release. Please report any issues on [GitHub Issues](https://github.com/yashrahurikar23/goagents/issues).

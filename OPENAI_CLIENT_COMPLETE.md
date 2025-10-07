@@ -2,7 +2,7 @@
 
 **Date:** October 7, 2025  
 **Status:** ✅ Production Ready  
-**Package:** `github.com/yashrahurikar/goagents/llm/openai`
+**Package:** `github.com/yashrahurikar23/goagents/llm/openai`
 
 ## 📋 Summary
 
@@ -261,7 +261,7 @@ import (
 
 ### Framework Dependencies
 ```go
-import "github.com/yashrahurikar/goagents/core"
+import "github.com/yashrahurikar23/goagents/core"
 ```
 
 **No external dependencies!** - Keeps the client lightweight and maintainable.

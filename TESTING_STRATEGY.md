@@ -168,7 +168,7 @@ package core_test
 
 import (
     "testing"
-    "github.com/yashrahurikar/goagents/core"
+    "github.com/yashrahurikar23/goagents/core"
 )
 
 func TestNewMessage(t *testing.T) {
@@ -230,7 +230,7 @@ package core_test
 import (
     "errors"
     "testing"
-    "github.com/yashrahurikar/goagents/core"
+    "github.com/yashrahurikar23/goagents/core"
 )
 
 func TestErrLLMFailure(t *testing.T) {
@@ -274,7 +274,7 @@ import (
     "net/http"
     "net/http/httptest"
     "testing"
-    "github.com/yashrahurikar/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/llm/openai"
 )
 
 // Mock HTTP server for testing
@@ -480,7 +480,7 @@ import (
     "net/http/httptest"
     "strings"
     "testing"
-    "github.com/yashrahurikar/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/llm/openai"
 )
 
 func TestCreateChatCompletionStream(t *testing.T) {
@@ -572,7 +572,7 @@ package tools_test
 import (
     "context"
     "testing"
-    "github.com/yashrahurikar/goagents/tools"
+    "github.com/yashrahurikar23/goagents/tools"
 )
 
 func TestCalculator_Add(t *testing.T) {
@@ -692,10 +692,10 @@ package integration_test
 import (
     "context"
     "testing"
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/openai"
-    "github.com/yashrahurikar/goagents/tools"
-    "github.com/yashrahurikar/goagents/tests/mocks"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/tools"
+    "github.com/yashrahurikar23/goagents/tests/mocks"
 )
 
 func TestFunctionAgent_WithMockedLLM(t *testing.T) {
@@ -756,7 +756,7 @@ package mocks
 
 import (
     "context"
-    "github.com/yashrahurikar/goagents/core"
+    "github.com/yashrahurikar23/goagents/core"
 )
 
 // MockLLM is a mock implementation of core.LLM for testing
@@ -839,7 +839,7 @@ package mocks
 
 import (
     "context"
-    "github.com/yashrahurikar/goagents/core"
+    "github.com/yashrahurikar23/goagents/core"
 )
 
 // MockTool is a mock implementation of core.Tool for testing
@@ -931,9 +931,9 @@ import (
     "context"
     "os"
     "testing"
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/openai"
-    "github.com/yashrahurikar/goagents/tools"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/tools"
 )
 
 func TestQuickstart_RealAPI(t *testing.T) {
@@ -1040,8 +1040,8 @@ package openai_test
 import (
     "context"
     "testing"
-    "github.com/yashrahurikar/goagents/llm/openai"
-    "github.com/yashrahurikar/goagents/tests/mocks"
+    "github.com/yashrahurikar23/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/tests/mocks"
 )
 
 func BenchmarkCreateChatCompletion(b *testing.B) {

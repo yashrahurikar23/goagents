@@ -10,13 +10,13 @@
 ### Module Name
 ```diff
 - module github.com/yashrahurikar/goagent
-+ module github.com/yashrahurikar/goagents
++ module github.com/yashrahurikar23/goagents
 ```
 
 ### Installation Command
 ```diff
 - go get github.com/yashrahurikar/goagent@latest
-+ go get github.com/yashrahurikar/goagents@latest
++ go get github.com/yashrahurikar23/goagents@latest
 ```
 
 ### Import Statements
@@ -24,9 +24,9 @@
 - import "github.com/yashrahurikar/goagent/agent"
 - import "github.com/yashrahurikar/goagent/llm/ollama"
 - import "github.com/yashrahurikar/goagent/core"
-+ import "github.com/yashrahurikar/goagents/agent"
-+ import "github.com/yashrahurikar/goagents/llm/ollama"
-+ import "github.com/yashrahurikar/goagents/core"
++ import "github.com/yashrahurikar23/goagents/agent"
++ import "github.com/yashrahurikar23/goagents/llm/ollama"
++ import "github.com/yashrahurikar23/goagents/core"
 ```
 
 ---
@@ -81,7 +81,7 @@
 
 ### Installation
 ```bash
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 ### Usage Example
@@ -91,8 +91,8 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
 )
 
 func main() {
@@ -105,9 +105,9 @@ func main() {
 
 ### Package URLs
 ```
-GitHub:    https://github.com/yashrahurikar/goagents
-Docs:      https://pkg.go.dev/github.com/yashrahurikar/goagents
-Install:   go get github.com/yashrahurikar/goagents@v0.1.0
+GitHub:    https://github.com/yashrahurikar23/goagents
+Docs:      https://pkg.go.dev/github.com/yashrahurikar23/goagents
+Install:   go get github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 ---
@@ -128,9 +128,9 @@ cd goagents
 go test ./...
 
 # Should show:
-# ok  github.com/yashrahurikar/goagents/core
-# ok  github.com/yashrahurikar/goagents/agent
-# ok  github.com/yashrahurikar/goagents/llm/ollama
+# ok  github.com/yashrahurikar23/goagents/core
+# ok  github.com/yashrahurikar23/goagents/agent
+# ok  github.com/yashrahurikar23/goagents/llm/ollama
 ```
 
 ### 3. Commit Changes
@@ -138,7 +138,7 @@ go test ./...
 git add .
 git commit -m "Rename package from goagent to goagents
 
-- Update module path to github.com/yashrahurikar/goagents
+- Update module path to github.com/yashrahurikar23/goagents
 - Update all import statements
 - Update all documentation
 - Plural form better reflects multiple agent types"
@@ -194,7 +194,7 @@ If you had already released as `goagent`, you would need:
 ### Current Status
 ```
 Package Name:     goagents ✅
-Module Path:      github.com/yashrahurikar/goagents ✅
+Module Path:      github.com/yashrahurikar23/goagents ✅
 All Files:        Updated ✅
 Tests:            Passing ✅
 Ready to Release: YES ✅
@@ -216,7 +216,7 @@ Production-ready AI agent framework for Go with support for multiple LLM provide
 ## Installation
 
 ```bash
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 ```
 
@@ -227,7 +227,7 @@ go get github.com/yashrahurikar/goagents@latest
 ```bash
 # 1. Check module path
 ✅ cat go.mod | grep module
-# Should show: module github.com/yashrahurikar/goagents
+# Should show: module github.com/yashrahurikar23/goagents
 
 # 2. Check imports in source
 ✅ grep -r "github.com/yashrahurikar/goagent" --include="*.go" .

@@ -71,7 +71,7 @@ git push origin --tags
 
 ### 6. Create GitHub Release
 
-1. Go to: https://github.com/yashrahurikar/goagents/releases/new
+1. Go to: https://github.com/yashrahurikar23/goagents/releases/new
 2. Select tag: `v0.1.0`
 3. Release title: `v0.1.0 - Initial Release 🚀`
 4. Description:
@@ -102,7 +102,7 @@ Production-ready AI agent framework for Go with support for multiple LLM provide
 ## 📦 Installation
 
 ```bash
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 ## 🚀 Quick Start
@@ -112,8 +112,8 @@ package main
 
 import (
     "context"
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
 )
 
 func main() {
@@ -126,9 +126,9 @@ func main() {
 
 ## 📚 Documentation
 
-- [README](https://github.com/yashrahurikar/goagents#readme)
-- [Quick Start Guide](https://github.com/yashrahurikar/goagents/blob/develop/READY_TO_SHIP.md)
-- [API Reference](https://pkg.go.dev/github.com/yashrahurikar/goagents)
+- [README](https://github.com/yashrahurikar23/goagents#readme)
+- [Quick Start Guide](https://github.com/yashrahurikar23/goagents/blob/develop/READY_TO_SHIP.md)
+- [API Reference](https://pkg.go.dev/github.com/yashrahurikar23/goagents)
 
 ## 📊 Test Results
 
@@ -141,11 +141,11 @@ func main() {
 
 ## 🤝 Contributing
 
-Contributions welcome! See [Contributing Guide](https://github.com/yashrahurikar/goagents#contributing).
+Contributions welcome! See [Contributing Guide](https://github.com/yashrahurikar23/goagents#contributing).
 
 ## 📄 License
 
-MIT License - see [LICENSE](https://github.com/yashrahurikar/goagents/blob/develop/LICENSE) file.
+MIT License - see [LICENSE](https://github.com/yashrahurikar23/goagents/blob/develop/LICENSE) file.
 
 ---
 
@@ -162,7 +162,7 @@ In a **new directory**, test installation:
 mkdir /tmp/goagent-test
 cd /tmp/goagent-test
 go mod init test
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 
 # Create test file
 cat > main.go << 'EOF'
@@ -171,8 +171,8 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
 )
 
 func main() {
@@ -203,7 +203,7 @@ go run main.go
 🧪 100+ tests passing
 
 Get started:
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 
 #golang #AI #opensource
 ```
@@ -241,8 +241,8 @@ fmt.Println(response.Content)
 
 ## Links
 
-- GitHub: https://github.com/yashrahurikar/goagents
-- Docs: https://pkg.go.dev/github.com/yashrahurikar/goagents
+- GitHub: https://github.com/yashrahurikar23/goagents
+- Docs: https://pkg.go.dev/github.com/yashrahurikar23/goagents
 
 Would love feedback from the community! 🙏
 ```
@@ -269,7 +269,7 @@ agent := agent.NewReActAgent(llm)
 response, _ := agent.Run(ctx, "Calculate 25 * 4")
 ```
 
-GitHub: https://github.com/yashrahurikar/goagents
+GitHub: https://github.com/yashrahurikar23/goagents
 
 Feedback welcome!
 ```
@@ -280,7 +280,7 @@ Submit to "Show HN"
 
 Title: `Show HN: GoAgent – AI agent framework for Go with local LLM support`
 
-URL: `https://github.com/yashrahurikar/goagents`
+URL: `https://github.com/yashrahurikar23/goagents`
 
 Text:
 ```
@@ -298,7 +298,7 @@ It's built with Go's strengths in mind: performance, concurrency, and type safet
 
 The project is MIT licensed and ready for production use. Would love feedback from the community!
 
-GitHub: https://github.com/yashrahurikar/goagents
+GitHub: https://github.com/yashrahurikar23/goagents
 ```
 
 ### 4. Dev.to Article
@@ -352,7 +352,7 @@ func (t *WeatherTool) Execute(ctx context.Context, args map[string]interface{}) 
 ## Quick Start
 
 ```bash
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 ```go
@@ -361,8 +361,8 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
 )
 
 func main() {
@@ -381,8 +381,8 @@ func main() {
 
 ## Get Involved
 
-- GitHub: https://github.com/yashrahurikar/goagents
-- Docs: https://pkg.go.dev/github.com/yashrahurikar/goagents
+- GitHub: https://github.com/yashrahurikar23/goagents
+- Docs: https://pkg.go.dev/github.com/yashrahurikar23/goagents
 - Issues: Contributions welcome!
 
 Built with ❤️ for the Go community.
@@ -408,9 +408,9 @@ Perfect for:
 - Running agents on-premise
 - High-performance AI deployments
 
-Get started: go get github.com/yashrahurikar/goagents@v0.1.0
+Get started: go get github.com/yashrahurikar23/goagents@v0.1.0
 
-Docs: https://pkg.go.dev/github.com/yashrahurikar/goagents
+Docs: https://pkg.go.dev/github.com/yashrahurikar23/goagents
 
 #golang #artificialintelligence #opensource #softwareengineering
 ```

@@ -92,7 +92,7 @@ Comprehensive test suite with real Ollama server:
     --- PASS: TestOllamaIntegration/WithSystemPrompt (0.10s)
     --- PASS: TestOllamaIntegration/WithOptions (0.16s)
 PASS
-ok      github.com/yashrahurikar/goagents/llm/ollama     1.425s
+ok      github.com/yashrahurikar23/goagents/llm/ollama     1.425s
 ```
 
 ---

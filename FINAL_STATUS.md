@@ -222,7 +222,7 @@ git push origin --tags
 
 ### Step 5: Create GitHub Release
 
-1. Go to: https://github.com/yashrahurikar/goagents/releases/new
+1. Go to: https://github.com/yashrahurikar23/goagents/releases/new
 2. Tag: `v0.1.0`
 3. Title: `v0.1.0 - Initial Release 🚀`
 4. Copy description from RELEASE_v0.1.0.md
@@ -235,7 +235,7 @@ git push origin --tags
 mkdir /tmp/test-goagent
 cd /tmp/test-goagent
 go mod init test
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 
 # Should succeed!
 ```

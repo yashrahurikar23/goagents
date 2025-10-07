@@ -244,7 +244,7 @@ All tests pass! Here's the output from the example tests:
 === RUN   TestAgent_WithMocks
 --- PASS: TestAgent_WithMocks (0.00s)
 PASS
-ok      github.com/yashrahurikar/goagents/tests/mocks    0.473s
+ok      github.com/yashrahurikar23/goagents/tests/mocks    0.473s
 ```
 
 **All 9 example tests pass** ✅
@@ -261,7 +261,7 @@ package core
 
 import (
     "testing"
-    "github.com/yashrahurikar/goagents/tests/testutil"
+    "github.com/yashrahurikar23/goagents/tests/testutil"
 )
 
 func TestUserMessage(t *testing.T) {
@@ -281,8 +281,8 @@ package openai
 import (
     "context"
     "testing"
-    "github.com/yashrahurikar/goagents/tests/mocks"
-    "github.com/yashrahurikar/goagents/tests/testutil"
+    "github.com/yashrahurikar23/goagents/tests/mocks"
+    "github.com/yashrahurikar23/goagents/tests/testutil"
 )
 
 func TestClient_Chat(t *testing.T) {
@@ -310,7 +310,7 @@ package agent
 
 import (
     "testing"
-    "github.com/yashrahurikar/goagents/tests/mocks"
+    "github.com/yashrahurikar23/goagents/tests/mocks"
 )
 
 func TestFunctionAgent_WithCalculator(t *testing.T) {

@@ -13,8 +13,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/yashrahurikar/goagents/core"
-	"github.com/yashrahurikar/goagents/llm/openai"
+	"github.com/yashrahurikar23/goagents/core"
+	"github.com/yashrahurikar23/goagents/llm/openai"
 )
 
 // FunctionAgent uses OpenAI's function calling capability to execute tools.

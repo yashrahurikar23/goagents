@@ -40,7 +40,7 @@ go mod tidy
 ```go
 import (
     "context"
-    "github.com/yashrahurikar/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/llm/openai"
 )
 
 // Create client

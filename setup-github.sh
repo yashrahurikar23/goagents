@@ -1,5 +1,6 @@
 #!/bin/bash
-# GitHub Setup Script for GoAgents
+# GitHub Secho "🔗 Adding GitHub remote..."
+git remote add origin git@github.com:yashrahurikar23/goagents.gitup Script for GoAgents
 # Run this after creating the GitHub repository
 
 cd /Users/yashrahurikar/yash/projects/tweeny/agentspace/goagents
@@ -70,15 +71,7 @@ Let's Go, Agents! 🚀"
 git push origin v0.1.0
 
 echo ""
-echo "✅ Setup complete!"
+echo "✅ Success! Your package is now live on GitHub! 🎉"
 echo ""
-echo "Your repository is live at:"
-echo "https://github.com/yashrahurikar/goagents"
-echo ""
-echo "Users can now install with:"
-echo "go get github.com/yashrahurikar/goagents@v0.1.0"
-echo ""
-echo "Documentation will appear at:"
-echo "https://pkg.go.dev/github.com/yashrahurikar/goagents"
-echo ""
-echo "🎉 Let's Go, Agents!"
+echo "Repository: https://github.com/yashrahurikar23/goagents"
+echo "Documentation will be available at: https://pkg.go.dev/github.com/yashrahurikar23/goagents"

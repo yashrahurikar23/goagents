@@ -38,7 +38,7 @@ git init
 git branch -M main
 
 # 2. Add GitHub remote
-git remote add origin https://github.com/yashrahurikar/goagents.git
+git remote add origin https://github.com/yashrahurikar23/goagents.git
 
 # 3. Add all files
 git add .
@@ -234,13 +234,13 @@ git branch -M main
 #### **2. Add GitHub remote:**
 
 ```bash
-git remote add origin https://github.com/yashrahurikar/goagents.git
+git remote add origin https://github.com/yashrahurikar23/goagents.git
 ```
 
 **If you get "remote origin already exists":**
 
 ```bash
-git remote set-url origin https://github.com/yashrahurikar/goagents.git
+git remote set-url origin https://github.com/yashrahurikar23/goagents.git
 ```
 
 #### **3. Verify remote:**
@@ -251,8 +251,8 @@ git remote -v
 
 Should show:
 ```
-origin  https://github.com/yashrahurikar/goagents.git (fetch)
-origin  https://github.com/yashrahurikar/goagents.git (push)
+origin  https://github.com/yashrahurikar23/goagents.git (fetch)
+origin  https://github.com/yashrahurikar23/goagents.git (push)
 ```
 
 #### **4. Stage all files:**
@@ -316,7 +316,7 @@ git push origin v0.1.0
 
 ### **Check GitHub:**
 
-Visit: https://github.com/yashrahurikar/goagents
+Visit: https://github.com/yashrahurikar23/goagents
 
 You should see:
 - ✅ All your files uploaded
@@ -337,10 +337,10 @@ cd /tmp/test-goagents
 go mod init test
 
 # Install your package
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 
 # Should succeed and show:
-# go: downloading github.com/yashrahurikar/goagents v0.1.0
+# go: downloading github.com/yashrahurikar23/goagents v0.1.0
 ```
 
 ### **Test Usage:**
@@ -354,8 +354,8 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
 )
 
 func main() {
@@ -380,7 +380,7 @@ Make it more visible with a proper release:
 
 ### **Go to:**
 
-https://github.com/yashrahurikar/goagents/releases/new
+https://github.com/yashrahurikar23/goagents/releases/new
 
 ### **Fill in:**
 
@@ -420,7 +420,7 @@ Production-ready AI agent framework for Go with support for multiple LLM provide
 ## 📦 Installation
 
 ```bash
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 ## 🚀 Quick Start
@@ -430,8 +430,8 @@ package main
 
 import (
     "context"
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
 )
 
 func main() {
@@ -444,12 +444,12 @@ func main() {
 
 ## 📚 Documentation
 
-- [README](https://github.com/yashrahurikar/goagents#readme)
-- [API Reference](https://pkg.go.dev/github.com/yashrahurikar/goagents)
+- [README](https://github.com/yashrahurikar23/goagents#readme)
+- [API Reference](https://pkg.go.dev/github.com/yashrahurikar23/goagents)
 
 ## 🤝 Contributing
 
-Contributions welcome! See [Contributing Guide](https://github.com/yashrahurikar/goagents/blob/main/CONTRIBUTING.md).
+Contributions welcome! See [Contributing Guide](https://github.com/yashrahurikar23/goagents/blob/main/CONTRIBUTING.md).
 
 ---
 
@@ -466,7 +466,7 @@ Your package will be automatically indexed by pkg.go.dev within 24 hours.
 
 ### **Check:**
 
-Visit: https://pkg.go.dev/github.com/yashrahurikar/goagents
+Visit: https://pkg.go.dev/github.com/yashrahurikar23/goagents
 
 **First visit might trigger indexing:**
 - If it says "not found", wait a few minutes and refresh
@@ -496,7 +496,7 @@ Production-ready AI agent framework for Go 🎉
 💾 Smart memory management
 🧪 100+ tests passing
 
-Install: go get github.com/yashrahurikar/goagents@latest
+Install: go get github.com/yashrahurikar23/goagents@latest
 
 Let's Go, Agents! 🚀
 
@@ -525,12 +525,12 @@ Share your achievement!
 ☐ 3. Add description and topics
 ☐ 4. Enable Issues and Discussions
 ☐ 5. Set up tag protection (v*)
-☐ 6. Run: git remote add origin https://github.com/yashrahurikar/goagents.git
+☐ 6. Run: git remote add origin https://github.com/yashrahurikar23/goagents.git
 ☐ 7. Run: git push -u origin main
 ☐ 8. Run: git tag v0.1.0
 ☐ 9. Run: git push origin v0.1.0
 ☐ 10. Create GitHub Release
-☐ 11. Test installation: go get github.com/yashrahurikar/goagents@v0.1.0
+☐ 11. Test installation: go get github.com/yashrahurikar23/goagents@v0.1.0
 ☐ 12. Check pkg.go.dev (within 24 hours)
 ☐ 13. Announce on social media
 ```
@@ -543,14 +543,14 @@ Once you complete these steps:
 
 **Your package is available at:**
 ```
-GitHub:    https://github.com/yashrahurikar/goagents
-Docs:      https://pkg.go.dev/github.com/yashrahurikar/goagents
-Install:   go get github.com/yashrahurikar/goagents@v0.1.0
+GitHub:    https://github.com/yashrahurikar23/goagents
+Docs:      https://pkg.go.dev/github.com/yashrahurikar23/goagents
+Install:   go get github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 **Users can immediately:**
 ```go
-import "github.com/yashrahurikar/goagents/agent"
+import "github.com/yashrahurikar23/goagents/agent"
 ```
 
 ---
@@ -560,7 +560,7 @@ import "github.com/yashrahurikar/goagents/agent"
 ### **"remote origin already exists"**
 
 ```bash
-git remote set-url origin https://github.com/yashrahurikar/goagents.git
+git remote set-url origin https://github.com/yashrahurikar23/goagents.git
 ```
 
 ### **"Permission denied (publickey)"**
@@ -572,7 +572,7 @@ Make sure you're authenticated with GitHub:
 ls -la ~/.ssh
 
 # Or use HTTPS (easier)
-git remote set-url origin https://github.com/yashrahurikar/goagents.git
+git remote set-url origin https://github.com/yashrahurikar23/goagents.git
 ```
 
 ### **"Repository not found"**

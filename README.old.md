@@ -18,7 +18,7 @@ Production-ready AI agent framework for Go with support for multiple LLM provide
 ## 📦 Installation
 
 ```bash
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 ## 🚀 Quick Start

@@ -38,7 +38,7 @@ Production-ready AI agent framework for Go with support for multiple LLM provide
 
 ```bash```bash
 
-go get github.com/yashrahurikar/goagents@latestgo get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latestgo get github.com/yashrahurikar23/goagents@latest
 
 ``````
 
@@ -68,9 +68,9 @@ import (   - Performance benchmarking (validated 3-6x improvements)
 
        - Complete SDK design (functional options pattern)
 
-    "github.com/yashrahurikar/goagents/agent"   - Package structure defined (agent, llm, tools, ingestion, etc.)
+    "github.com/yashrahurikar23/goagents/agent"   - Package structure defined (agent, llm, tools, ingestion, etc.)
 
-    "github.com/yashrahurikar/goagents/llm/ollama"   - API patterns established (idiomatic Go)
+    "github.com/yashrahurikar23/goagents/llm/ollama"   - API patterns established (idiomatic Go)
 
 )   - Versioning strategy (SemVer)
 
@@ -150,11 +150,11 @@ import (├── tools/        # Tool interface + built-in tools
 
     ├── retrieval/    # Retrievers with filtering & re-ranking
 
-    "github.com/yashrahurikar/goagents/agent"├── query/        # Query engines
+    "github.com/yashrahurikar23/goagents/agent"├── query/        # Query engines
 
-    "github.com/yashrahurikar/goagents/llm/openai"├── workflow/     # Event-driven orchestration
+    "github.com/yashrahurikar23/goagents/llm/openai"├── workflow/     # Event-driven orchestration
 
-    "github.com/yashrahurikar/goagents/tools"└── embeddings/   # Embedding models
+    "github.com/yashrahurikar23/goagents/tools"└── embeddings/   # Embedding models
 
 )```
 
@@ -220,9 +220,9 @@ import (- ✅ Basic agents (FunctionAgent, ReActAgent)
 
     - ✅ Document readers (PDF, web, markdown)
 
-    "github.com/yashrahurikar/goagents/agent"- ✅ Text splitters & ingestion pipeline
+    "github.com/yashrahurikar23/goagents/agent"- ✅ Text splitters & ingestion pipeline
 
-    "github.com/yashrahurikar/goagents/llm/ollama"- ✅ Query engines & retrieval
+    "github.com/yashrahurikar23/goagents/llm/ollama"- ✅ Query engines & retrieval
 
 )
 
@@ -384,7 +384,7 @@ Memory strategies:
 
 ```go
 
-import "github.com/yashrahurikar/goagents/llm/ollama"**Effort:** 8-12 weeks
+import "github.com/yashrahurikar23/goagents/llm/ollama"**Effort:** 8-12 weeks
 
 
 
@@ -412,7 +412,7 @@ llm := ollama.New(---
 
 ```go
 
-import "github.com/yashrahurikar/goagents/llm/openai"**Effort:** 8-10 weeks
+import "github.com/yashrahurikar23/goagents/llm/openai"**Effort:** 8-10 weeks
 
 
 
@@ -448,7 +448,7 @@ import (
 
     ### Team Options
 
-    "github.com/yashrahurikar/goagents/core"
+    "github.com/yashrahurikar23/goagents/core"
 
 )**Option A: Solo Developer (Recommended for Bootstrap)**
 
@@ -532,7 +532,7 @@ func (t *WeatherTool) Execute(ctx context.Context, args map[string]interface{}) 
 
 - **[Examples](./examples/)** - Working code examples- ✅ Documentation site live
 
-- **[API Reference](https://pkg.go.dev/github.com/yashrahurikar/goagents)** - Full API docs- ✅ 50+ unit + integration tests
+- **[API Reference](https://pkg.go.dev/github.com/yashrahurikar23/goagents)** - Full API docs- ✅ 50+ unit + integration tests
 
 
 
@@ -698,9 +698,9 @@ MIT License - see [LICENSE](./LICENSE) file for details.### Week 42: Production 
 
 ## Recommendation
 
-- **Issues:** [GitHub Issues](https://github.com/yashrahurikar/goagents/issues)
+- **Issues:** [GitHub Issues](https://github.com/yashrahurikar23/goagents/issues)
 
-- **Discussions:** [GitHub Discussions](https://github.com/yashrahurikar/goagents/discussions)### ✅ PROCEED WITH IMPLEMENTATION
+- **Discussions:** [GitHub Discussions](https://github.com/yashrahurikar23/goagents/discussions)### ✅ PROCEED WITH IMPLEMENTATION
 
 - **Twitter:** [@yashrahurikar](https://twitter.com/yashrahurikar)
 

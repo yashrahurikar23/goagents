@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/yashrahurikar/goagents/core"
+	"github.com/yashrahurikar23/goagents/core"
 )
 
 // Client represents an Ollama LLM client

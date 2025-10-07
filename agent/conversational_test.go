@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yashrahurikar/goagents/core"
-	"github.com/yashrahurikar/goagents/tests/mocks"
+	"github.com/yashrahurikar23/goagents/core"
+	"github.com/yashrahurikar23/goagents/tests/mocks"
 )
 
 // TestConversationalAgent_NewAgent tests agent creation.

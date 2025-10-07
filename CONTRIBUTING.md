@@ -6,7 +6,7 @@ Thanks for your interest in contributing to GoAgent! 🎉
 
 ### Reporting Bugs
 
-1. Check if the issue already exists in [GitHub Issues](https://github.com/yashrahurikar/goagents/issues)
+1. Check if the issue already exists in [GitHub Issues](https://github.com/yashrahurikar23/goagents/issues)
 2. Use the Bug Report template
 3. Include:
    - Clear description of the bug
@@ -29,7 +29,7 @@ Thanks for your interest in contributing to GoAgent! 🎉
 
 1. **Fork the repository**
    ```bash
-   git clone https://github.com/yashrahurikar/goagents.git
+   git clone https://github.com/yashrahurikar23/goagents.git
    cd goagent
    ```
 
@@ -155,7 +155,7 @@ func TestCalculator_Execute(t *testing.T) {
 ## Project Structure
 
 ```
-github.com/yashrahurikar/goagents/
+github.com/yashrahurikar23/goagents/
 ├── agent/              # Agent implementations
 │   ├── function.go     # FunctionAgent
 │   ├── react.go        # ReActAgent
@@ -184,7 +184,7 @@ github.com/yashrahurikar/goagents/
 
 ```bash
 # Clone the repository
-git clone https://github.com/yashrahurikar/goagents.git
+git clone https://github.com/yashrahurikar23/goagents.git
 cd goagent
 
 # Install dependencies (should be none!)
@@ -222,9 +222,9 @@ go test ./llm/ollama -v
 
 ## Questions?
 
-- **General questions:** Use [GitHub Discussions](https://github.com/yashrahurikar/goagents/discussions)
-- **Bug reports:** Use [GitHub Issues](https://github.com/yashrahurikar/goagents/issues)
-- **Feature requests:** Use [GitHub Issues](https://github.com/yashrahurikar/goagents/issues)
+- **General questions:** Use [GitHub Discussions](https://github.com/yashrahurikar23/goagents/discussions)
+- **Bug reports:** Use [GitHub Issues](https://github.com/yashrahurikar23/goagents/issues)
+- **Feature requests:** Use [GitHub Issues](https://github.com/yashrahurikar23/goagents/issues)
 - **Twitter:** [@yashrahurikar](https://twitter.com/yashrahurikar)
 
 ## Code of Conduct

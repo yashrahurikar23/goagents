@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/yashrahurikar/goagents/core"
+	"github.com/yashrahurikar23/goagents/core"
 )
 
 // ConversationalAgent maintains conversation history and provides

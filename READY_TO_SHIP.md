@@ -16,13 +16,13 @@
 
 **How users will install:**
 ```bash
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 **How users will use:**
 ```go
-import "github.com/yashrahurikar/goagents/agent"
-import "github.com/yashrahurikar/goagents/llm/ollama"
+import "github.com/yashrahurikar23/goagents/agent"
+import "github.com/yashrahurikar23/goagents/llm/ollama"
 
 llm := ollama.New(ollama.WithModel("llama3.2:1b"))
 agent := agent.NewReActAgent(llm)
@@ -38,17 +38,17 @@ response, _ := agent.Run(ctx, "What is 2+2?")
 **1. Your module is already configured:**
 ```go
 // go.mod
-module github.com/yashrahurikar/goagents
+module github.com/yashrahurikar23/goagents
 go 1.22.1
 ```
 
 **2. Once you push to GitHub:**
-- Repository: `https://github.com/yashrahurikar/goagents`
+- Repository: `https://github.com/yashrahurikar23/goagents`
 - Make it **PUBLIC**
 - Add a Git tag: `v0.1.0`
 
 **3. Go's package system does the rest:**
-- Users run: `go get github.com/yashrahurikar/goagents@v0.1.0`
+- Users run: `go get github.com/yashrahurikar23/goagents@v0.1.0`
 - Go automatically downloads from your GitHub repo
 - No npm publish, no pypi upload needed!
 
@@ -69,7 +69,7 @@ Build production-ready AI agents in Go with OpenAI, Ollama, and custom LLMs.
 ## Installation
 
 ```bash
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 ## Quick Start
@@ -80,8 +80,8 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
 )
 
 func main() {
@@ -105,7 +105,7 @@ func main() {
 
 - [Full Guide](./PACKAGING_GUIDE.md)
 - [Examples](./examples/)
-- [API Docs](https://pkg.go.dev/github.com/yashrahurikar/goagents)
+- [API Docs](https://pkg.go.dev/github.com/yashrahurikar23/goagents)
 
 ## License
 
@@ -163,7 +163,7 @@ git commit -m "Release v0.1.0: Core agents, OpenAI, Ollama support"
 git tag v0.1.0
 
 # Add GitHub remote (update with your repo URL)
-git remote add origin https://github.com/yashrahurikar/goagents.git
+git remote add origin https://github.com/yashrahurikar23/goagents.git
 
 # Push everything
 git push -u origin main
@@ -172,7 +172,7 @@ git push origin v0.1.0
 
 ### Step 5: Make Repository Public (2 min)
 
-1. Go to: https://github.com/yashrahurikar/goagents/settings
+1. Go to: https://github.com/yashrahurikar23/goagents/settings
 2. Scroll to "Danger Zone"
 3. Click "Change visibility"
 4. Select "Public"
@@ -181,7 +181,7 @@ git push origin v0.1.0
 
 **Wait 5-10 minutes, then visit:**
 ```
-https://pkg.go.dev/github.com/yashrahurikar/goagents@v0.1.0
+https://pkg.go.dev/github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 **Try installation in a test project:**
@@ -190,7 +190,7 @@ mkdir /tmp/test-goagent
 cd /tmp/test-goagent
 go mod init test
 
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 # Should download successfully!
 ```
 
@@ -202,13 +202,13 @@ go get github.com/yashrahurikar/goagents@v0.1.0
 
 **1. Discovery:**
 - Googles "go ai agent framework"
-- Finds your GitHub: github.com/yashrahurikar/goagents
+- Finds your GitHub: github.com/yashrahurikar23/goagents
 - Reads README.md
 
 **2. Installation:**
 ```bash
 # In their project
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 **3. First Code:**
@@ -220,8 +220,8 @@ import (
     "fmt"
     "log"
     
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/ollama"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/ollama"
 )
 
 func main() {
@@ -280,13 +280,13 @@ git push origin v1.0.0
 **Users specify versions:**
 ```bash
 # Latest
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 
 # Specific version
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 
 # Major version
-go get github.com/yashrahurikar/goagents@v0
+go get github.com/yashrahurikar23/goagents@v0
 ```
 
 ---
@@ -353,7 +353,7 @@ AI agent framework for Go with:
 ✅ Local AI support
 ✅ Production ready
 
-Try it: go get github.com/yashrahurikar/goagents
+Try it: go get github.com/yashrahurikar23/goagents
 
 #golang #AI #LLM
 ```
@@ -490,25 +490,25 @@ golangci-lint run
 ```bash
 # Preview locally
 godoc -http=:6060
-# Visit: http://localhost:6060/pkg/github.com/yashrahurikar/goagents/
+# Visit: http://localhost:6060/pkg/github.com/yashrahurikar23/goagents/
 ```
 
 ### For Users
 
 **Installation:**
 ```bash
-go get github.com/yashrahurikar/goagents@latest
+go get github.com/yashrahurikar23/goagents@latest
 ```
 
 **Import:**
 ```go
-import "github.com/yashrahurikar/goagents/agent"
+import "github.com/yashrahurikar23/goagents/agent"
 ```
 
 **Documentation:**
-- pkg.go.dev: https://pkg.go.dev/github.com/yashrahurikar/goagents
-- GitHub: https://github.com/yashrahurikar/goagents
-- Examples: https://github.com/yashrahurikar/goagents/tree/main/examples
+- pkg.go.dev: https://pkg.go.dev/github.com/yashrahurikar23/goagents
+- GitHub: https://github.com/yashrahurikar23/goagents
+- Examples: https://github.com/yashrahurikar23/goagents/tree/main/examples
 
 ---
 
@@ -541,7 +541,7 @@ git push origin main --tags
 
 **Your package is now available to the world:**
 ```bash
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 ---

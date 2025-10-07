@@ -68,7 +68,7 @@ Test in a clean directory:
 mkdir /tmp/test-goagent
 cd /tmp/test-goagent
 go mod init test
-go get github.com/yashrahurikar/goagents@v0.1.0
+go get github.com/yashrahurikar23/goagents@v0.1.0
 ```
 
 If this works, you're live! 🎉
@@ -89,12 +89,12 @@ If this works, you're live! 🎉
 ### ✅ What Happens Automatically
 
 1. **Immediate (< 1 minute after git push):**
-   - Users can install: `go get github.com/yashrahurikar/goagents@v0.1.0`
+   - Users can install: `go get github.com/yashrahurikar23/goagents@v0.1.0`
    - Package is available worldwide
 
 2. **Within 24 hours:**
    - pkg.go.dev indexes your package automatically
-   - Documentation appears at: https://pkg.go.dev/github.com/yashrahurikar/goagents
+   - Documentation appears at: https://pkg.go.dev/github.com/yashrahurikar23/goagents
    - Google can find your package
 
 3. **Zero maintenance:**
@@ -192,19 +192,19 @@ git push origin v0.1.0
 **A:** Yes! Keep the repo private. Users with GitHub access can still install it using `go get` with their git credentials.
 
 ### Q: How do I know if pkg.go.dev has indexed my package?
-**A:** Visit https://pkg.go.dev/github.com/yashrahurikar/goagents after 24 hours. If it's not there, try visiting the URL - it will trigger indexing.
+**A:** Visit https://pkg.go.dev/github.com/yashrahurikar23/goagents after 24 hours. If it's not there, try visiting the URL - it will trigger indexing.
 
 ---
 
 ## Your Package URL Structure
 
 ```
-GitHub:       https://github.com/yashrahurikar/goagents
-Go Get:       go get github.com/yashrahurikar/goagents@v0.1.0
-Docs:         https://pkg.go.dev/github.com/yashrahurikar/goagents
-Releases:     https://github.com/yashrahurikar/goagents/releases
-Issues:       https://github.com/yashrahurikar/goagents/issues
-Discussions:  https://github.com/yashrahurikar/goagents/discussions
+GitHub:       https://github.com/yashrahurikar23/goagents
+Go Get:       go get github.com/yashrahurikar23/goagents@v0.1.0
+Docs:         https://pkg.go.dev/github.com/yashrahurikar23/goagents
+Releases:     https://github.com/yashrahurikar23/goagents/releases
+Issues:       https://github.com/yashrahurikar23/goagents/issues
+Discussions:  https://github.com/yashrahurikar23/goagents/discussions
 ```
 
 ---

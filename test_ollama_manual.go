@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/yashrahurikar/goagents/core"
-	"github.com/yashrahurikar/goagents/llm/ollama"
+	"github.com/yashrahurikar23/goagents/core"
+	"github.com/yashrahurikar23/goagents/llm/ollama"
 )
 
 func main() {

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yashrahurikar/goagents/core"
+	"github.com/yashrahurikar23/goagents/core"
 )
 
 // TestOllamaIntegration tests the Ollama client with a real server

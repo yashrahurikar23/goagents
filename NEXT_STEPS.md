@@ -93,7 +93,7 @@ import (
     "context"
     "fmt"
     "math"
-    "github.com/yashrahurikar/goagents/core"
+    "github.com/yashrahurikar23/goagents/core"
 )
 
 type Calculator struct{}
@@ -181,7 +181,7 @@ import (
     "context"
     "encoding/json"
     "fmt"
-    "github.com/yashrahurikar/goagents/core"
+    "github.com/yashrahurikar23/goagents/core"
 )
 
 type FunctionAgent struct {
@@ -264,9 +264,9 @@ import (
     "log"
     "os"
     
-    "github.com/yashrahurikar/goagents/agent"
-    "github.com/yashrahurikar/goagents/llm/openai"
-    "github.com/yashrahurikar/goagents/tools"
+    "github.com/yashrahurikar23/goagents/agent"
+    "github.com/yashrahurikar23/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/tools"
 )
 
 func main() {

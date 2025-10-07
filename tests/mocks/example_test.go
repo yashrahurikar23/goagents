@@ -6,9 +6,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/yashrahurikar/goagents/core"
-	"github.com/yashrahurikar/goagents/tests/mocks"
-	"github.com/yashrahurikar/goagents/tests/testutil"
+	"github.com/yashrahurikar23/goagents/core"
+	"github.com/yashrahurikar23/goagents/tests/mocks"
+	"github.com/yashrahurikar23/goagents/tests/testutil"
 )
 
 // TestMockLLM_BasicUsage demonstrates basic mock LLM usage

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/yashrahurikar/goagents/core"
+	"github.com/yashrahurikar23/goagents/core"
 )
 
 // MockLLM is a mock implementation of core.LLM for testing.

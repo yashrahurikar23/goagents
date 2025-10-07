@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/yashrahurikar/goagents/agent"
-	"github.com/yashrahurikar/goagents/llm/ollama"
-	"github.com/yashrahurikar/goagents/tools"
+	"github.com/yashrahurikar23/goagents/agent"
+	"github.com/yashrahurikar23/goagents/llm/ollama"
+	"github.com/yashrahurikar23/goagents/tools"
 )
 
 func main() {

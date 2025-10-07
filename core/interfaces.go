@@ -6,7 +6,7 @@
 //
 // Example usage:
 //
-//	import "github.com/yashrahurikar/goagents/core"
+//	import "github.com/yashrahurikar23/goagents/core"
 //
 //	// Implement the LLM interface
 //	type MyLLM struct {}

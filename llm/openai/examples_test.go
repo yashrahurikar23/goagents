@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/yashrahurikar/goagents/llm/openai"
+	"github.com/yashrahurikar23/goagents/llm/openai"
 )
 
 // Example_basicCompletion demonstrates a simple text completion.

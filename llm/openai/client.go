@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/yashrahurikar/goagents/core"
+	"github.com/yashrahurikar23/goagents/core"
 )
 
 const (

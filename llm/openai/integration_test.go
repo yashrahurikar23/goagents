@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yashrahurikar/goagents/core"
-	"github.com/yashrahurikar/goagents/llm/openai"
+	"github.com/yashrahurikar23/goagents/core"
+	"github.com/yashrahurikar23/goagents/llm/openai"
 )
 
 // getAPIKey returns the OpenAI API key from environment or skips the test

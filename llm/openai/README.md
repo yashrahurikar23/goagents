@@ -1,6 +1,6 @@
 # OpenAI Client
 
-**Package:** `github.com/yashrahurikar/goagents/llm/openai`
+**Package:** `github.com/yashrahurikar23/goagents/llm/openai`
 
 A comprehensive OpenAI API client supporting all major features: chat completions, streaming, function calling, vision, embeddings, moderation, and more.
 
@@ -20,7 +20,7 @@ A comprehensive OpenAI API client supporting all major features: chat completion
 ## Installation
 
 ```bash
-go get github.com/yashrahurikar/goagents
+go get github.com/yashrahurikar23/goagents
 ```
 
 ## Quick Start
@@ -34,7 +34,7 @@ import (
     "log"
     "os"
     
-    "github.com/yashrahurikar/goagents/llm/openai"
+    "github.com/yashrahurikar23/goagents/llm/openai"
 )
 
 func main() {
@@ -395,7 +395,7 @@ resp, err := client.Complete(ctx, "...")
 This client implements the `core.LLM` interface:
 
 ```go
-import "github.com/yashrahurikar/goagents/core"
+import "github.com/yashrahurikar23/goagents/core"
 
 func useWithCore(llm core.LLM) {
     messages := []core.Message{

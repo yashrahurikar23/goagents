@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/yashrahurikar/goagents/core"
+	"github.com/yashrahurikar23/goagents/core"
 )
 
 // MockTool is a mock implementation of core.Tool for testing.

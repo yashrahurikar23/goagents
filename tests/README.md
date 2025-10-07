@@ -2,7 +2,7 @@
 
 This directory contains all testing utilities, mocks, and test suites for the goagent framework.
 
-**⚠️ IMPORTANT:** This directory is **NOT** part of the production package. Users installing `github.com/yashrahurikar/goagents` will NOT get these files. This is development-only infrastructure.
+**⚠️ IMPORTANT:** This directory is **NOT** part of the production package. Users installing `github.com/yashrahurikar23/goagents` will NOT get these files. This is development-only infrastructure.
 
 ## Directory Structure
 
@@ -100,7 +100,7 @@ tests/e2e/openai_test.go
 // tests/mocks/llm_mock.go
 package mocks
 
-import "github.com/yashrahurikar/goagents/core"
+import "github.com/yashrahurikar23/goagents/core"
 
 type MockLLM struct {
     // Implements core.LLM
@@ -112,7 +112,7 @@ type MockLLM struct {
 // llm/openai/client_test.go
 package openai
 
-import "github.com/yashrahurikar/goagents/tests/mocks"
+import "github.com/yashrahurikar23/goagents/tests/mocks"
 
 func TestClient(t *testing.T) {
     mockLLM := mocks.NewMockLLM()
@@ -125,7 +125,7 @@ func TestClient(t *testing.T) {
 // core/interfaces.go
 package core
 
-import "github.com/yashrahurikar/goagents/tests/mocks" // ❌ NEVER DO THIS
+import "github.com/yashrahurikar23/goagents/tests/mocks" // ❌ NEVER DO THIS
 ```
 
 ## Running Tests
