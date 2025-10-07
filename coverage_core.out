@@ -1,0 +1,12 @@
+mode: set
+github.com/yashrahurikar/goagent/core/errors.go:13.45,15.2 1 1
+github.com/yashrahurikar/goagent/core/errors.go:22.42,24.2 1 1
+github.com/yashrahurikar/goagent/core/errors.go:32.43,34.2 1 1
+github.com/yashrahurikar/goagent/core/errors.go:36.43,38.2 1 1
+github.com/yashrahurikar/goagent/core/errors.go:46.40,48.2 1 1
+github.com/yashrahurikar/goagent/core/errors.go:50.40,52.2 1 1
+github.com/yashrahurikar/goagent/core/errors.go:59.37,61.2 1 1
+github.com/yashrahurikar/goagent/core/types.go:88.47,94.2 1 1
+github.com/yashrahurikar/goagent/core/types.go:97.44,99.2 1 1
+github.com/yashrahurikar/goagent/core/types.go:102.42,104.2 1 1
+github.com/yashrahurikar/goagent/core/types.go:107.47,109.2 1 1
