@@ -1,7 +1,7 @@
 # 🚀 GoAgents - AI Agent Framework for Go
 
 [![Go Version](https://img.shields.io/badge/Go-1.22%2B-00ADD8?style=flat&logo=go)](https://go.dev/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.- **v0.3.0** 🚧 Anthropic Claude ✅, Google Gemini ✅, File Operations ✅, web search, streamingo/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://img.shields.io/badge/tests-113%20passing-success)](https://github.com/yashrahurikar23/goagents)
 
 Production-ready AI agent framework for Go with support for multiple LLM providers and agent architectures.
@@ -13,10 +13,10 @@ Production-ready AI agent framework for Go with support for multiple LLM provide
 ## ✨ Features
 
 - 🤖 **3 Agent Types**: FunctionAgent, ReActAgent, ConversationalAgent
-- 🔌 **Multiple LLM Providers**: OpenAI, Ollama (local AI)
-- 🛠️ **Powerful Tools**: Calculator, HTTP client, easy custom tools
+- 🔌 **4 LLM Providers**: OpenAI, Anthropic Claude, Google Gemini, Ollama (local AI)
+- 🛠️ **Powerful Tools**: Calculator, HTTP client, File operations, easy custom tools
 - 💾 **Memory Management**: 4 strategies for conversation history
-- 🧪 **Fully Tested**: 113+ tests passing
+- 🧪 **Fully Tested**: 165+ tests passing
 - ⚡ **Production Ready**: Type-safe, concurrent, efficient
 - 🌐 **Local AI Support**: Run offline with Ollama
 
@@ -121,7 +121,8 @@ agent := agent.NewConversationalAgent(llm,
 ### Built-in Tools
 
 - **Calculator**: Math operations (add, subtract, multiply, divide, power, sqrt)
-- **HTTP Client** (NEW in v0.2.0): REST API calls with auth, retries, JSON
+- **HTTP Client** (v0.2.0): REST API calls with auth, retries, JSON
+- **File Operations** (NEW in v0.3.0): Secure file system access with read, write, list, delete, and safety features
 
 ### Custom Tools
 
@@ -150,12 +151,15 @@ func (t *MyTool) Execute(ctx context.Context, args map[string]interface{}) (inte
 ## 📋 Examples
 
 - **[ReAct with Ollama](./examples/react_ollama.go)** - Local AI
+- **[Anthropic Claude](./examples/anthropic_claude/)** - Claude models
+- **[Google Gemini](./examples/gemini/)** - Gemini models (free tier!)
 - **[HTTP Tool](./examples/http_tool/)** - REST API integration
-- **[Quickstart](./examples/quickstart/)** - Getting started
 
 Run examples:
 \`\`\`bash
 go run examples/react_ollama.go
+go run examples/anthropic_claude/main.go
+go run examples/gemini/main.go
 \`\`\`
 
 ---
@@ -173,11 +177,11 @@ go test -cover ./...       # With coverage
 ## 🗺️ Roadmap
 
 - **v0.1.0** ✅ Core framework, 3 agents, OpenAI + Ollama
-- **v0.2.0** ✅ HTTP tool, examples (Current)
-- **v0.3.0** 📝 File ops, web search, streaming
+- **v0.2.0** ✅ HTTP tool, examples
+- **v0.3.0** � Anthropic Claude ✅, Google Gemini ✅, File ops, web search, streaming
 - **v0.5.0** 🔮 RAG, vector DBs, multi-agent
 
-[Full Roadmap](./docs/ROADMAP_v0.2.0.md)
+[Full Roadmap](./docs/roadmap/V0.3.0_IMPLEMENTATION_CHECKLIST.md)
 
 ---
 

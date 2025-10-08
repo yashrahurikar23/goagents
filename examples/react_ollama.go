@@ -39,7 +39,8 @@ func main() {
 	if err != nil {
 		log.Printf("Error: %v\n", err)
 	} else {
-		fmt.Printf("Answer: %s\n", response.Content)
+		// Print the result
+		fmt.Println(response.Content)
 	}
 
 	// Show reasoning trace
@@ -66,7 +67,7 @@ func main() {
 	if err != nil {
 		log.Printf("Error: %v\n", err)
 	} else {
-		fmt.Printf("Answer: %s\n", response2.Content)
+		fmt.Printf("Answer: %s", response2.Content)
 	}
 
 	// Show reasoning trace

@@ -5,6 +5,91 @@ All notable changes to GoAgent will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-10-08
+
+### Added
+
+#### LLM Providers (NEW!)
+- **Anthropic Claude Integration**
+  - Complete Claude 3.5 Sonnet, 3 Opus, 3 Haiku support
+  - Anthropic Messages API with 200K context window
+  - System prompt handling and message conversion
+  - Comprehensive error handling and metadata enrichment
+  - 22 tests (17 unit + 5 integration)
+  - Example with multiple Claude models
+  
+- **Google Gemini Integration**
+  - Gemini 2.0 Flash, 1.5 Pro, 1.5 Flash support
+  - Role mapping ("assistant" → "model" for Gemini compatibility)
+  - Safety ratings and content filtering
+  - PromptFeedback and blocked content handling
+  - 28 tests (22 unit + 6 integration)
+  - Example with free tier Gemini access
+
+#### Tools (NEW!)
+- **File Operations Tool**
+  - 7 secure file operations (read, write, append, list, exists, delete, info)
+  - **5-layer security protection:**
+    1. Base directory enforcement
+    2. Path traversal prevention (blocks "..")
+    3. File size limits (default 10MB)
+    4. Read-only mode support
+    5. Safe file permissions (0644 files, 0755 directories)
+  - 21 comprehensive tests covering operations, security, edge cases
+  - Example with 8 usage scenarios
+  - Detailed security documentation
+
+#### Code Quality
+- **Comprehensive Code Comments**
+  - 745+ lines of WHY-focused documentation
+  - Package-level docs for all modules (PURPOSE, DESIGN DECISIONS, KEY FEATURES)
+  - Method-level docs explaining rationale and business logic
+  - Security-critical code with detailed defense-in-depth explanations
+  - Follows project code-comments-guidelines.md
+
+#### Documentation
+- **New Examples:**
+  - `examples/anthropic_claude/` - Complete Claude integration example
+  - `examples/gemini/` - Gemini with free tier guide
+  - `examples/file_operations/` - 8 file operation scenarios
+  
+- **Archive Documentation:**
+  - `CODE_COMMENTS_COMPLETE.md` - Documentation enhancement summary
+  - `FILE_OPERATIONS_TOOL_COMPLETE.md` - File tool implementation details
+
+### Technical Details
+- **Total Tests:** 180+ (all passing) ⬆️ from 113
+- **LLM Providers:** 4 (OpenAI, Ollama, Anthropic, Gemini) ⬆️ from 2
+- **Tools:** 3 (Calculator, HTTP, File Operations) ⬆️ from 2
+- **Code Comments:** ~745 lines of comprehensive WHY-focused documentation
+- **Security:** Multi-layer file system protection with explicit documentation
+
+### Changed
+- Enhanced error messages across all LLM providers
+- Improved metadata tracking for all providers (token usage, model info, finish reasons)
+- Better type safety with pointer types for optional parameters
+
+### Performance
+- All tests pass in < 3 seconds
+- Efficient message conversion and validation
+- Token usage tracking for cost optimization
+- File size limits prevent memory exhaustion
+
+---
+
+## [0.2.0] - 2025-10-08
+
+### Added
+- **HTTP Tool** with REST API support, authentication, retries
+- Documentation reorganization (guides, archive)
+- 13 HTTP tool tests
+
+### Changed
+- Cleaner directory structure
+- Moved historical docs to `docs/archive/`
+
+---
+
 ## [0.1.0] - 2025-10-07
 
 ### Added
