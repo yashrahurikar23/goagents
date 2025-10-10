@@ -122,11 +122,11 @@ func TestModel(t *testing.T) {
 func TestChatWithoutAPIKey(t *testing.T) {
 	client := New()
 	ctx := context.Background()
-	
+
 	messages := []core.Message{
 		{Role: "user", Content: "Hello"},
 	}
-	
+
 	_, err := client.Chat(ctx, messages)
 	if err == nil {
 		t.Error("Expected error when API key is not set")
@@ -156,7 +156,7 @@ func TestChatSuccess(t *testing.T) {
 			TotalTokenCount:      30,
 		},
 	}
-	
+
 	// Create mock server
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Verify request
@@ -166,32 +166,32 @@ func TestChatSuccess(t *testing.T) {
 		if !strings.Contains(r.URL.String(), "key=test-key") {
 			t.Error("Expected API key in URL")
 		}
-		
+
 		// Send response
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(mockResponse)
 	}))
 	defer server.Close()
-	
+
 	client := New(
 		WithAPIKey("test-key"),
 		WithBaseURL(server.URL),
 	)
-	
+
 	ctx := context.Background()
 	messages := []core.Message{
 		{Role: "user", Content: "Hello"},
 	}
-	
+
 	resp, err := client.Chat(ctx, messages)
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
-	
+
 	if resp.Content != "Hello! How can I help you today?" {
 		t.Errorf("Unexpected response content: %s", resp.Content)
 	}
-	
+
 	// Check metadata
 	if resp.Meta["prompt_tokens"] != 10 {
 		t.Errorf("Expected prompt_tokens in metadata")
@@ -206,21 +206,21 @@ func TestChatWithSystemMessage(t *testing.T) {
 		// Read and verify request
 		var req GenerateContentRequest
 		json.NewDecoder(r.Body).Decode(&req)
-		
+
 		if req.SystemInstruction == nil {
 			t.Error("Expected systemInstruction in request")
-		} else if len(req.SystemInstruction.Parts) == 0 || 
+		} else if len(req.SystemInstruction.Parts) == 0 ||
 			req.SystemInstruction.Parts[0].Text != "You are a helpful assistant." {
 			t.Error("System instruction not properly set")
 		}
-		
+
 		// Check that system message is not in contents
 		for _, content := range req.Contents {
 			if content.Role == "system" {
 				t.Error("System message should not be in contents array")
 			}
 		}
-		
+
 		// Send response
 		mockResponse := GenerateContentResponse{
 			Candidates: []Candidate{
@@ -237,18 +237,18 @@ func TestChatWithSystemMessage(t *testing.T) {
 		json.NewEncoder(w).Encode(mockResponse)
 	}))
 	defer server.Close()
-	
+
 	client := New(
 		WithAPIKey("test-key"),
 		WithBaseURL(server.URL),
 	)
-	
+
 	ctx := context.Background()
 	messages := []core.Message{
 		{Role: "system", Content: "You are a helpful assistant."},
 		{Role: "user", Content: "Hello"},
 	}
-	
+
 	_, err := client.Chat(ctx, messages)
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
@@ -268,17 +268,17 @@ func TestChatAPIError(t *testing.T) {
 		json.NewEncoder(w).Encode(errResp)
 	}))
 	defer server.Close()
-	
+
 	client := New(
 		WithAPIKey("test-key"),
 		WithBaseURL(server.URL),
 	)
-	
+
 	ctx := context.Background()
 	messages := []core.Message{
 		{Role: "user", Content: "Hello"},
 	}
-	
+
 	_, err := client.Chat(ctx, messages)
 	if err == nil {
 		t.Fatal("Expected error for API error response")
@@ -294,23 +294,23 @@ func TestChatBlockedContent(t *testing.T) {
 			BlockReason: "SAFETY",
 		},
 	}
-	
+
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(mockResponse)
 	}))
 	defer server.Close()
-	
+
 	client := New(
 		WithAPIKey("test-key"),
 		WithBaseURL(server.URL),
 	)
-	
+
 	ctx := context.Background()
 	messages := []core.Message{
 		{Role: "user", Content: "Hello"},
 	}
-	
+
 	_, err := client.Chat(ctx, messages)
 	if err == nil {
 		t.Fatal("Expected error for blocked content")
@@ -332,24 +332,24 @@ func TestCompleteSuccess(t *testing.T) {
 			},
 		},
 	}
-	
+
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(mockResponse)
 	}))
 	defer server.Close()
-	
+
 	client := New(
 		WithAPIKey("test-key"),
 		WithBaseURL(server.URL),
 	)
-	
+
 	ctx := context.Background()
 	result, err := client.Complete(ctx, "Test prompt")
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
-	
+
 	if result != "This is a completion" {
 		t.Errorf("Unexpected completion result: %s", result)
 	}
@@ -357,7 +357,7 @@ func TestCompleteSuccess(t *testing.T) {
 
 func TestConvertMessages(t *testing.T) {
 	client := New()
-	
+
 	messages := []core.Message{
 		{Role: "system", Content: "System prompt 1"},
 		{Role: "system", Content: "System prompt 2"},
@@ -365,14 +365,14 @@ func TestConvertMessages(t *testing.T) {
 		{Role: "assistant", Content: "Assistant response"},
 		{Role: "user", Content: "Another user message"},
 	}
-	
+
 	contents, systemInstruction := client.convertMessages(messages)
-	
+
 	// Should have 3 non-system messages
 	if len(contents) != 3 {
 		t.Errorf("Expected 3 contents, got %d", len(contents))
 	}
-	
+
 	// System prompts should be combined
 	if systemInstruction == nil {
 		t.Fatal("Expected non-nil systemInstruction")
@@ -382,10 +382,10 @@ func TestConvertMessages(t *testing.T) {
 	}
 	expectedSystem := "System prompt 1\n\nSystem prompt 2"
 	if systemInstruction.Parts[0].Text != expectedSystem {
-		t.Errorf("Expected system '%s', got '%s'", 
+		t.Errorf("Expected system '%s', got '%s'",
 			expectedSystem, systemInstruction.Parts[0].Text)
 	}
-	
+
 	// Check message roles - Gemini uses "model" instead of "assistant"
 	if contents[0].Role != "user" {
 		t.Errorf("Expected first content role to be user, got %s", contents[0].Role)
@@ -402,19 +402,19 @@ func TestContextCancellation(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	}))
 	defer server.Close()
-	
+
 	client := New(
 		WithAPIKey("test-key"),
 		WithBaseURL(server.URL),
 	)
-	
+
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 	defer cancel()
-	
+
 	messages := []core.Message{
 		{Role: "user", Content: "Hello"},
 	}
-	
+
 	_, err := client.Chat(ctx, messages)
 	if err == nil {
 		t.Fatal("Expected error due to context cancellation")
@@ -429,7 +429,7 @@ func TestMultipleModels(t *testing.T) {
 		ModelGemini15Pro,
 		ModelGeminiPro,
 	}
-	
+
 	for _, model := range models {
 		client := New(WithModel(model))
 		if client.Model() != model {
@@ -442,7 +442,7 @@ func TestGenerationConfigIncluded(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var req GenerateContentRequest
 		json.NewDecoder(r.Body).Decode(&req)
-		
+
 		if req.GenerationConfig == nil {
 			t.Error("Expected generationConfig in request")
 		} else {
@@ -453,7 +453,7 @@ func TestGenerationConfigIncluded(t *testing.T) {
 				t.Error("MaxOutputTokens not set correctly")
 			}
 		}
-		
+
 		mockResponse := GenerateContentResponse{
 			Candidates: []Candidate{
 				{
@@ -468,19 +468,19 @@ func TestGenerationConfigIncluded(t *testing.T) {
 		json.NewEncoder(w).Encode(mockResponse)
 	}))
 	defer server.Close()
-	
+
 	client := New(
 		WithAPIKey("test-key"),
 		WithBaseURL(server.URL),
 		WithTemperature(0.7),
 		WithMaxTokens(1024),
 	)
-	
+
 	ctx := context.Background()
 	messages := []core.Message{
 		{Role: "user", Content: "Hello"},
 	}
-	
+
 	_, err := client.Chat(ctx, messages)
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
@@ -503,28 +503,28 @@ func TestMultiPartResponse(t *testing.T) {
 			},
 		},
 	}
-	
+
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(mockResponse)
 	}))
 	defer server.Close()
-	
+
 	client := New(
 		WithAPIKey("test-key"),
 		WithBaseURL(server.URL),
 	)
-	
+
 	ctx := context.Background()
 	messages := []core.Message{
 		{Role: "user", Content: "Hello"},
 	}
-	
+
 	resp, err := client.Chat(ctx, messages)
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
-	
+
 	expected := "Part 1. Part 2. Part 3."
 	if resp.Content != expected {
 		t.Errorf("Expected content '%s', got '%s'", expected, resp.Content)
