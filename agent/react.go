@@ -181,6 +181,210 @@ func (a *ReActAgent) Run(ctx context.Context, input string) (*core.Response, err
 	return nil, fmt.Errorf("max iterations (%d) reached without final answer", a.maxIter)
 }
 
+// RunStream executes the agent with streaming and emits events in real-time.
+// Shows the reasoning process as it happens, providing full transparency into
+// the agent's decision-making.
+//
+// Events emitted:
+// - "thought": Each reasoning step
+// - "token": Tokens from LLM responses (if LLM supports streaming)
+// - "tool_start": When a tool is about to be executed
+// - "tool_end": When a tool finishes executing
+// - "answer": The final answer
+// - "complete": When execution finishes
+// - "error": If an error occurs
+func (a *ReActAgent) RunStream(ctx context.Context, input string) (<-chan core.StreamEvent, error) {
+	// Reset trace for this run
+	a.trace = make([]ReActStep, 0)
+
+	// Check if LLM supports streaming (optional for ReAct)
+	streamingLLM, supportsStreaming := a.llm.(core.StreamingLLM)
+
+	// Create event channel
+	eventChan := make(chan core.StreamEvent, 10)
+
+	// Build initial prompt
+	prompt := a.buildPrompt(input)
+
+	// Start execution in goroutine
+	go func() {
+		defer close(eventChan)
+
+		conversationHistory := prompt
+
+		// ReAct reasoning loop
+		for iteration := 0; iteration < a.maxIter; iteration++ {
+			step := ReActStep{
+				Iteration: iteration + 1,
+			}
+
+			var response string
+			var err error
+
+			// Get LLM response (with or without streaming)
+			if supportsStreaming {
+				// Stream the LLM response
+				chunkChan, err := streamingLLM.CompleteStream(ctx, conversationHistory)
+				if err != nil {
+					select {
+					case eventChan <- core.NewErrorEvent(fmt.Errorf("LLM call failed: %w", err)):
+					case <-ctx.Done():
+					}
+					return
+				}
+
+				// Collect response and emit tokens
+				for chunk := range chunkChan {
+					if chunk.Error != nil {
+						select {
+						case eventChan <- core.NewErrorEvent(chunk.Error):
+						case <-ctx.Done():
+						}
+						return
+					}
+
+					// Emit token events
+					if chunk.Delta != "" {
+						tokenEvent := core.NewStreamEventWithData(
+							core.EventTypeToken,
+							chunk.Delta,
+							map[string]interface{}{
+								"index":     chunk.Index,
+								"iteration": iteration + 1,
+							},
+						)
+						select {
+						case eventChan <- tokenEvent:
+						case <-ctx.Done():
+							return
+						}
+					}
+
+					response = chunk.Content
+				}
+			} else {
+				// Non-streaming fallback
+				response, err = a.llm.Complete(ctx, conversationHistory)
+				if err != nil {
+					select {
+					case eventChan <- core.NewErrorEvent(fmt.Errorf("LLM call failed: %w", err)):
+					case <-ctx.Done():
+					}
+					return
+				}
+			}
+
+			// Parse the response for Thought, Action, or Final Answer
+			thought, action, actionInput, finalAnswer := a.parseResponse(response)
+
+			// Emit thought event
+			if thought != "" {
+				step.Thought = thought
+				thoughtEvent := core.NewStreamEventWithData(
+					core.EventTypeThought,
+					thought,
+					map[string]interface{}{
+						"iteration": iteration + 1,
+					},
+				)
+				select {
+				case eventChan <- thoughtEvent:
+				case <-ctx.Done():
+					return
+				}
+			}
+
+			// Check if we have a final answer
+			if finalAnswer != "" {
+				a.trace = append(a.trace, step)
+
+				// Emit answer event
+				answerEvent := core.NewStreamEvent(core.EventTypeAnswer, finalAnswer)
+				select {
+				case eventChan <- answerEvent:
+				case <-ctx.Done():
+					return
+				}
+
+				// Emit complete event
+				completeEvent := core.NewStreamEventWithData(
+					core.EventTypeComplete,
+					finalAnswer,
+					map[string]interface{}{
+						"iterations": iteration + 1,
+						"trace":      a.trace,
+					},
+				)
+				select {
+				case eventChan <- completeEvent:
+				case <-ctx.Done():
+				}
+				return
+			}
+
+			// Check if we have an action
+			if action == "" {
+				// No action and no final answer - continue conversation
+				conversationHistory += "\n" + response + "\n"
+				continue
+			}
+
+			step.Action = action
+			step.ActionInput = actionInput
+
+			// Emit tool_start event
+			toolStartEvent := core.NewStreamEventWithData(
+				core.EventTypeToolStart,
+				action,
+				map[string]interface{}{
+					"input":     actionInput,
+					"iteration": iteration + 1,
+				},
+			)
+			select {
+			case eventChan <- toolStartEvent:
+			case <-ctx.Done():
+				return
+			}
+
+			// Execute the action (tool)
+			observation, err := a.executeAction(ctx, action, actionInput)
+			if err != nil {
+				observation = fmt.Sprintf("Error: %v", err)
+			}
+
+			step.Observation = observation
+			a.trace = append(a.trace, step)
+
+			// Emit tool_end event
+			toolEndEvent := core.NewStreamEventWithData(
+				core.EventTypeToolEnd,
+				action,
+				map[string]interface{}{
+					"result":    observation,
+					"iteration": iteration + 1,
+				},
+			)
+			select {
+			case eventChan <- toolEndEvent:
+			case <-ctx.Done():
+				return
+			}
+
+			// Add observation to conversation
+			conversationHistory += fmt.Sprintf("\n%s\nObservation: %s\n", response, observation)
+		}
+
+		// Max iterations reached
+		select {
+		case eventChan <- core.NewErrorEvent(fmt.Errorf("max iterations (%d) reached without final answer", a.maxIter)):
+		case <-ctx.Done():
+		}
+	}()
+
+	return eventChan, nil
+}
+
 // Reset clears the reasoning trace.
 func (a *ReActAgent) Reset() error {
 	a.trace = make([]ReActStep, 0)

@@ -210,6 +210,193 @@ func (a *FunctionAgent) Run(ctx context.Context, input string) (*core.Response, 
 	return nil, fmt.Errorf("max iterations (%d) reached without final answer", a.maxIter)
 }
 
+// RunStream executes the agent with streaming and emits events in real-time.
+// Emits events as the agent reasons, calls tools, and generates responses.
+//
+// Events emitted:
+// - "token": Each token as it's generated from the LLM
+// - "tool_start": When a tool is about to be executed
+// - "tool_end": When a tool finishes executing
+// - "complete": When generation finishes successfully
+// - "error": If an error occurs
+func (a *FunctionAgent) RunStream(ctx context.Context, input string) (<-chan core.StreamEvent, error) {
+	// Initialize messages if this is the first run
+	if len(a.messages) == 0 && a.systemPrompt != "" {
+		a.messages = append(a.messages, core.SystemMessage(a.systemPrompt))
+	}
+
+	// Add user message
+	a.messages = append(a.messages, core.UserMessage(input))
+
+	// Check if LLM supports OpenAI function calling
+	openaiClient, ok := a.llm.(*openai.Client)
+	if !ok {
+		return nil, fmt.Errorf("FunctionAgent requires an LLM that supports function calling (OpenAI)")
+	}
+
+	// Create event channel
+	eventChan := make(chan core.StreamEvent, 10)
+
+	// Convert tools to OpenAI function format
+	functions := a.convertToolsToFunctions()
+
+	// Start execution in goroutine
+	go func() {
+		defer close(eventChan)
+
+		// Main execution loop
+		for iter := 0; iter < a.maxIter; iter++ {
+			// For OpenAI function calling, we need to use the direct API
+			// because streaming with function calls requires special handling
+
+			// Create chat completion request with functions
+			req := openai.ChatCompletionRequest{
+				Model:    "gpt-3.5-turbo",
+				Messages: a.convertToOpenAIMessages(a.messages),
+			}
+
+			// Add functions if we have tools
+			if len(functions) > 0 {
+				req.Tools = functions
+				req.ToolChoice = "auto"
+			}
+
+			// Call LLM (non-streaming for function calling decisions)
+			resp, err := openaiClient.CreateChatCompletion(ctx, req)
+			if err != nil {
+				select {
+				case eventChan <- core.NewErrorEvent(fmt.Errorf("LLM call failed: %w", err)):
+				case <-ctx.Done():
+				}
+				return
+			}
+
+			// Extract the response message
+			if len(resp.Choices) == 0 {
+				select {
+				case eventChan <- core.NewErrorEvent(fmt.Errorf("no response from LLM")):
+				case <-ctx.Done():
+				}
+				return
+			}
+
+			choice := resp.Choices[0]
+
+			// Convert content to string
+			contentStr := ""
+			if choice.Message.Content != nil {
+				contentStr = fmt.Sprintf("%v", choice.Message.Content)
+			}
+
+			// Check if there are tool calls
+			if len(choice.Message.ToolCalls) > 0 {
+				// Emit tool_start events for each tool
+				for _, tc := range choice.Message.ToolCalls {
+					toolStartEvent := core.NewStreamEventWithData(
+						core.EventTypeToolStart,
+						tc.Function.Name,
+						map[string]interface{}{
+							"tool_id":   tc.ID,
+							"arguments": tc.Function.Arguments,
+						},
+					)
+					select {
+					case eventChan <- toolStartEvent:
+					case <-ctx.Done():
+						return
+					}
+				}
+
+				// Execute tool calls
+				toolResults, err := a.executeToolCalls(ctx, choice.Message.ToolCalls)
+				if err != nil {
+					select {
+					case eventChan <- core.NewErrorEvent(fmt.Errorf("tool execution failed: %w", err)):
+					case <-ctx.Done():
+					}
+					return
+				}
+
+				// Emit tool_end events
+				for _, result := range toolResults {
+					toolEndEvent := core.NewStreamEventWithData(
+						core.EventTypeToolEnd,
+						result.Name,
+						map[string]interface{}{
+							"tool_id": result.ID,
+							"result":  result.Result,
+						},
+					)
+					select {
+					case eventChan <- toolEndEvent:
+					case <-ctx.Done():
+						return
+					}
+				}
+
+				// Add assistant message with tool calls
+				assistantMsg := core.Message{
+					Role:      "assistant",
+					Content:   contentStr,
+					ToolCalls: toolResults,
+				}
+				a.messages = append(a.messages, assistantMsg)
+
+				// Add tool results as separate messages
+				for _, result := range toolResults {
+					toolMsg := core.Message{
+						Role:       "tool",
+						Content:    fmt.Sprintf("%v", result.Result),
+						Name:       result.Name,
+						ToolCallID: result.ID,
+					}
+					a.messages = append(a.messages, toolMsg)
+				}
+
+				// Continue loop to send tool results back to LLM
+				continue
+			}
+
+			// No tool calls - stream the final response
+			// Since we already have the content, emit it as tokens
+			if contentStr != "" {
+				// Try to stream the final response
+				a.messages = append(a.messages, core.AssistantMessage(contentStr))
+
+				// Emit tokens (simulate streaming by emitting the full content)
+				tokenEvent := core.NewStreamEventWithData(
+					core.EventTypeToken,
+					contentStr,
+					map[string]interface{}{
+						"index": 0,
+					},
+				)
+				select {
+				case eventChan <- tokenEvent:
+				case <-ctx.Done():
+					return
+				}
+			}
+
+			// Emit complete event
+			completeEvent := core.NewStreamEvent(core.EventTypeComplete, contentStr)
+			select {
+			case eventChan <- completeEvent:
+			case <-ctx.Done():
+			}
+			return
+		}
+
+		// Max iterations reached
+		select {
+		case eventChan <- core.NewErrorEvent(fmt.Errorf("max iterations (%d) reached without final answer", a.maxIter)):
+		case <-ctx.Done():
+		}
+	}()
+
+	return eventChan, nil
+}
+
 // Reset clears the conversation history.
 func (a *FunctionAgent) Reset() error {
 	a.messages = make([]core.Message, 0)

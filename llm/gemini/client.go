@@ -298,7 +298,7 @@ func (c *Client) ChatStream(ctx context.Context, messages []core.Message, opts .
 			}
 
 			candidate := resp.Candidates[0]
-			
+
 			// Extract text from content parts
 			var delta string
 			if len(candidate.Content.Parts) > 0 {
