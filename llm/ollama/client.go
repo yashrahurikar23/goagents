@@ -172,6 +172,172 @@ func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
 	return resp.Response, nil
 }
 
+// ChatStream implements the core.StreamingLLM interface for streaming chat completions.
+//
+// WHY THIS METHOD:
+// - Implements core.StreamingLLM interface for framework compatibility
+// - Returns a channel of core.StreamChunk for real-time token delivery
+// - Handles context cancellation gracefully
+// - Accumulates content across chunks for convenience
+//
+// IMPLEMENTATION:
+// - Uses Ollama's newline-delimited JSON streaming format
+// - Converts Ollama chunks to core.StreamChunk format
+// - Runs stream processing in a goroutine
+// - Closes channel when stream completes or errors occur
+func (c *Client) ChatStream(ctx context.Context, messages []core.Message, opts ...interface{}) (<-chan core.StreamChunk, error) {
+	// Convert messages to Ollama format
+	ollamaMessages := make([]ChatMessage, len(messages))
+	for i, msg := range messages {
+		ollamaMessages[i] = ChatMessage{
+			Role:    msg.Role,
+			Content: msg.Content,
+		}
+	}
+
+	// Create request
+	req := ChatRequest{
+		Model:    c.model,
+		Messages: ollamaMessages,
+		Stream:   true,
+		Options:  c.options,
+	}
+
+	// Create HTTP request
+	body, err := json.Marshal(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal request: %w", err)
+	}
+
+	httpReq, err := http.NewRequestWithContext(ctx, "POST", c.baseURL+"/api/chat", bytes.NewReader(body))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
+	httpReq.Header.Set("Content-Type", "application/json")
+
+	// Send request
+	httpResp, err := c.httpClient.Do(httpReq)
+	if err != nil {
+		return nil, fmt.Errorf("failed to send request: %w", err)
+	}
+
+	// Check status code
+	if httpResp.StatusCode != http.StatusOK {
+		httpResp.Body.Close()
+		return nil, fmt.Errorf("unexpected status code: %d", httpResp.StatusCode)
+	}
+
+	// Create buffered channel for chunks
+	chunkChan := make(chan core.StreamChunk, 10)
+
+	// Track accumulated content and index
+	var content string
+	index := 0
+
+	// Start goroutine to read streaming response
+	go func() {
+		defer close(chunkChan)
+		defer httpResp.Body.Close()
+
+		scanner := bufio.NewScanner(httpResp.Body)
+		for scanner.Scan() {
+			// Check for context cancellation
+			select {
+			case <-ctx.Done():
+				errorChunk := core.StreamChunk{
+					Content:   content,
+					Index:     index,
+					Error:     ctx.Err(),
+					Timestamp: time.Now(),
+				}
+				select {
+				case chunkChan <- errorChunk:
+				case <-ctx.Done():
+				}
+				return
+			default:
+			}
+
+			var resp ChatResponse
+			if err := json.Unmarshal(scanner.Bytes(), &resp); err != nil {
+				errorChunk := core.StreamChunk{
+					Content:   content,
+					Index:     index,
+					Error:     fmt.Errorf("failed to unmarshal response: %w", err),
+					Timestamp: time.Now(),
+				}
+				select {
+				case chunkChan <- errorChunk:
+				case <-ctx.Done():
+				}
+				return
+			}
+
+			delta := resp.Message.Content
+			content += delta
+
+			finishReason := ""
+			if resp.Done {
+				finishReason = "stop"
+			}
+
+			// Create StreamChunk
+			streamChunk := core.StreamChunk{
+				Content:      content,
+				Delta:        delta,
+				Index:        index,
+				FinishReason: finishReason,
+				Metadata: map[string]interface{}{
+					"model": c.model,
+					"done":  resp.Done,
+				},
+				Timestamp: time.Now(),
+			}
+
+			index++
+
+			// Send chunk on channel
+			select {
+			case <-ctx.Done():
+				return
+			case chunkChan <- streamChunk:
+			}
+
+			if resp.Done {
+				return
+			}
+		}
+
+		if err := scanner.Err(); err != nil {
+			errorChunk := core.StreamChunk{
+				Content:   content,
+				Index:     index,
+				Error:     fmt.Errorf("error reading stream: %w", err),
+				Timestamp: time.Now(),
+			}
+			select {
+			case chunkChan <- errorChunk:
+			case <-ctx.Done():
+			}
+		}
+	}()
+
+	return chunkChan, nil
+}
+
+// CompleteStream implements the core.StreamingLLM interface for streaming completions.
+//
+// WHY THIS METHOD:
+// - Provides simple streaming interface for single-prompt use cases
+// - Wraps prompt as user message and delegates to ChatStream
+// - Maintains consistency with Complete() method signature
+func (c *Client) CompleteStream(ctx context.Context, prompt string, opts ...interface{}) (<-chan core.StreamChunk, error) {
+	messages := []core.Message{
+		{Role: "user", Content: prompt},
+	}
+	return c.ChatStream(ctx, messages, opts...)
+}
+
 // StreamChunk represents a chunk of streaming response
 type StreamChunk struct {
 	Content string

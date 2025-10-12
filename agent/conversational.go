@@ -134,6 +134,96 @@ func (a *ConversationalAgent) Run(ctx context.Context, input string) (*core.Resp
 	return response, nil
 }
 
+// RunStream processes a user message and streams the response in real-time.
+// Emits events as tokens arrive from the LLM.
+//
+// Events emitted:
+// - "token": Each token as it's generated
+// - "complete": When generation finishes successfully
+// - "error": If an error occurs
+func (a *ConversationalAgent) RunStream(ctx context.Context, input string) (<-chan core.StreamEvent, error) {
+	// Check if LLM supports streaming
+	streamingLLM, ok := a.llm.(core.StreamingLLM)
+	if !ok {
+		return nil, fmt.Errorf("LLM does not support streaming")
+	}
+
+	// Add user message
+	a.messages = append(a.messages, core.UserMessage(input))
+
+	// Apply memory management before calling LLM
+	if err := a.applyMemoryStrategy(ctx); err != nil {
+		return nil, fmt.Errorf("memory management failed: %w", err)
+	}
+
+	// Create event channel
+	eventChan := make(chan core.StreamEvent, 10)
+
+	// Start streaming in goroutine
+	go func() {
+		defer close(eventChan)
+
+		// Get streaming response
+		chunkChan, err := streamingLLM.ChatStream(ctx, a.messages)
+		if err != nil {
+			select {
+			case eventChan <- core.NewErrorEvent(fmt.Errorf("stream initialization failed: %w", err)):
+			case <-ctx.Done():
+			}
+			return
+		}
+
+		var fullContent string
+
+		// Process chunks and emit token events
+		for chunk := range chunkChan {
+			// Check for errors in chunk
+			if chunk.Error != nil {
+				select {
+				case eventChan <- core.NewErrorEvent(chunk.Error):
+				case <-ctx.Done():
+				}
+				return
+			}
+
+			// Emit token event for each delta
+			if chunk.Delta != "" {
+				tokenEvent := core.NewStreamEventWithData(
+					core.EventTypeToken,
+					chunk.Delta,
+					map[string]interface{}{
+						"index": chunk.Index,
+					},
+				)
+				select {
+				case eventChan <- tokenEvent:
+				case <-ctx.Done():
+					return
+				}
+			}
+
+			fullContent = chunk.Content
+
+			// Check if stream finished
+			if chunk.FinishReason != "" {
+				break
+			}
+		}
+
+		// Add assistant response to history
+		a.messages = append(a.messages, core.AssistantMessage(fullContent))
+
+		// Emit complete event
+		completeEvent := core.NewStreamEvent(core.EventTypeComplete, fullContent)
+		select {
+		case eventChan <- completeEvent:
+		case <-ctx.Done():
+		}
+	}()
+
+	return eventChan, nil
+}
+
 // Chat is an alias for Run to match conversational patterns.
 func (a *ConversationalAgent) Chat(ctx context.Context, message string) (*core.Response, error) {
 	return a.Run(ctx, message)

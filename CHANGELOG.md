@@ -5,6 +5,114 @@ All notable changes to GoAgent will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2025-10-12
+
+### Added - Streaming Support 🌊
+
+#### Core Streaming Infrastructure
+- **StreamChunk Type** - Real-time token delivery with metadata
+  - Content accumulation across chunks
+  - Delta tracking for incremental updates
+  - Finish reason detection (stop, length, tool_calls, content_filter)
+  - Error handling and timestamp tracking
+  - Provider-specific metadata support
+
+- **StreamEvent Type** - Agent execution event system
+  - 7 event types: token, thought, tool_start, tool_end, answer, complete, error
+  - Event-driven architecture for real-time progress tracking
+  - Structured data payloads for each event type
+  - Timestamp tracking for performance analysis
+
+- **StreamingLLM Interface** - Streaming capabilities for all providers
+  - `ChatStream()` - Stream chat completions token-by-token
+  - `CompleteStream()` - Stream single-prompt completions
+  - Context cancellation support
+  - Buffered channels for optimal performance
+
+- **StreamingAgent Interface** - Real-time agent execution
+  - `RunStream()` - Stream agent reasoning and actions
+  - Event emission for thoughts, tool calls, and answers
+  - Full transparency into agent decision-making
+  - Progress indicators for long-running tasks
+
+#### Provider Streaming Support (4/4 Complete)
+- **OpenAI Streaming**
+  - SSE (Server-Sent Events) format support
+  - Token-by-token GPT responses
+  - Function calling with streaming
+  - Comprehensive error handling
+
+- **Ollama Streaming**
+  - JSON streaming format support
+  - Local model streaming (llama, gemma, phi, etc.)
+  - 6 comprehensive tests (100% passing)
+  - Context cancellation and error handling
+
+- **Anthropic Streaming**
+  - SSE format with content_block_delta events
+  - Claude 3.5 Sonnet streaming support
+  - 6 comprehensive tests (100% passing)
+  - Proper content accumulation
+
+- **Gemini Streaming** ✨ NEW!
+  - Newline-delimited JSON format
+  - Gemini 2.0 Flash and 1.5 Pro streaming
+  - 6 comprehensive tests (100% passing)
+  - Candidate and part content extraction
+
+#### Agent Streaming (3/3 Complete)
+- **ConversationalAgent.RunStream()**
+  - Stream LLM responses in real-time
+  - Token and complete events
+  - Memory management integration
+  - Context-aware cancellation
+
+- **FunctionAgent.RunStream()**
+  - Stream function calling responses
+  - tool_start and tool_end events
+  - Multi-iteration loop support
+  - OpenAI function calling with streaming
+
+- **ReActAgent.RunStream()**
+  - Most comprehensive streaming implementation
+  - Thought events showing reasoning process
+  - Token events for LLM responses
+  - Tool execution events (start/end)
+  - Answer and complete events
+  - Works with both streaming and non-streaming LLMs
+  - Full reasoning trace visibility
+
+### Testing
+- **18 New Streaming Tests** (All Passing)
+  - Ollama: 6 tests (basic, cancellation, error, complete, accumulation, metadata)
+  - Anthropic: 6 tests (same coverage)
+  - Gemini: 6 tests (same coverage)
+  - Comprehensive edge case coverage
+  - Context cancellation testing
+  - Error handling validation
+
+### Technical Details
+- **Total Tests:** 198+ (all passing) ⬆️ from 180
+- **New Interfaces:** 2 (StreamingLLM, StreamingAgent)
+- **New Types:** 2 (StreamChunk, StreamEvent)
+- **Streaming Providers:** 4/4 (100% coverage)
+- **Streaming Agents:** 3/3 (100% coverage)
+- **Code Quality:** Zero breaking changes, fully backward compatible
+
+### Performance
+- Buffered channels for optimal throughput
+- Non-blocking goroutines for concurrent streaming
+- Context cancellation propagation
+- Efficient memory usage with incremental processing
+
+### Backward Compatibility
+- ✅ **100% backward compatible**
+- All existing non-streaming APIs unchanged
+- Streaming is opt-in via new methods
+- No breaking changes to existing code
+
+---
+
 ## [0.3.0] - 2025-10-08
 
 ### Added

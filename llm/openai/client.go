@@ -241,6 +241,143 @@ func (c *Client) CreateChatCompletion(ctx context.Context, req ChatCompletionReq
 	return &resp, nil
 }
 
+// ChatStream implements the core.StreamingLLM interface for streaming chat completions.
+//
+// WHY THIS METHOD:
+// - Implements core.StreamingLLM interface for framework compatibility
+// - Returns a channel of core.StreamChunk for real-time token delivery
+// - Handles context cancellation gracefully
+// - Accumulates content across chunks for convenience
+//
+// IMPLEMENTATION:
+// - Uses CreateChatCompletionStream internally
+// - Converts OpenAI SSE chunks to core.StreamChunk format
+// - Runs stream processing in a goroutine
+// - Closes channel when stream completes or errors occur
+func (c *Client) ChatStream(ctx context.Context, messages []core.Message, opts ...interface{}) (<-chan core.StreamChunk, error) {
+	// Convert core.Message to ChatMessage
+	chatMessages := make([]ChatMessage, len(messages))
+	for i, msg := range messages {
+		chatMessages[i] = ChatMessage{
+			Role:    msg.Role,
+			Content: msg.Content,
+			Name:    msg.Name,
+		}
+	}
+
+	req := ChatCompletionRequest{
+		Model:    c.model,
+		Messages: chatMessages,
+	}
+
+	// Create buffered channel for chunks
+	chunkChan := make(chan core.StreamChunk, 10)
+
+	// Track accumulated content and index
+	var content string
+	index := 0
+
+	// Start streaming in a goroutine
+	go func() {
+		defer close(chunkChan)
+
+		streamOpts := StreamOptions{
+			OnChunk: func(chunk *ChatCompletionStreamResponse) error {
+				// Check for context cancellation
+				select {
+				case <-ctx.Done():
+					return ctx.Err()
+				default:
+				}
+
+				// Extract delta from chunk
+				if len(chunk.Choices) == 0 {
+					return nil
+				}
+
+				choice := chunk.Choices[0]
+				var delta string
+
+				if choice.Delta != nil {
+					if deltaContent, ok := choice.Delta.Content.(string); ok {
+						delta = deltaContent
+						content += delta
+					}
+				}
+
+				// Create StreamChunk
+				streamChunk := core.StreamChunk{
+					Content:      content,
+					Delta:        delta,
+					Index:        index,
+					FinishReason: choice.FinishReason,
+					Metadata: map[string]interface{}{
+						"model": chunk.Model,
+						"id":    chunk.ID,
+					},
+					Timestamp: time.Now(),
+				}
+
+				index++
+
+				// Send chunk on channel
+				select {
+				case <-ctx.Done():
+					return ctx.Err()
+				case chunkChan <- streamChunk:
+				}
+
+				return nil
+			},
+			OnComplete: func() error {
+				return nil
+			},
+			OnError: func(err error) {
+				// Send error chunk
+				errorChunk := core.StreamChunk{
+					Content:   content,
+					Index:     index,
+					Error:     err,
+					Timestamp: time.Now(),
+				}
+				select {
+				case <-ctx.Done():
+				case chunkChan <- errorChunk:
+				}
+			},
+		}
+
+		if err := c.CreateChatCompletionStream(ctx, req, streamOpts); err != nil {
+			// Send final error chunk
+			errorChunk := core.StreamChunk{
+				Content:   content,
+				Index:     index,
+				Error:     err,
+				Timestamp: time.Now(),
+			}
+			select {
+			case <-ctx.Done():
+			case chunkChan <- errorChunk:
+			}
+		}
+	}()
+
+	return chunkChan, nil
+}
+
+// CompleteStream implements the core.StreamingLLM interface for streaming completions.
+//
+// WHY THIS METHOD:
+// - Provides simple streaming interface for single-prompt use cases
+// - Wraps prompt as user message and delegates to ChatStream
+// - Maintains consistency with Complete() method signature
+func (c *Client) CompleteStream(ctx context.Context, prompt string, opts ...interface{}) (<-chan core.StreamChunk, error) {
+	messages := []core.Message{
+		{Role: "user", Content: prompt},
+	}
+	return c.ChatStream(ctx, messages, opts...)
+}
+
 // CreateChatCompletionStream creates a streaming chat completion.
 //
 // WHY STREAMING:
