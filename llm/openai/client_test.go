@@ -3,10 +3,14 @@ package openai
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
+
+	"github.com/yashrahurikar23/goagents/core"
 )
 
 func TestNew(t *testing.T) {
@@ -381,5 +385,319 @@ func TestIsRateLimitError(t *testing.T) {
 				t.Errorf("IsRateLimitError() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestChatStream(t *testing.T) {
+	// Mock SSE streaming response
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			t.Errorf("Expected POST request, got %s", r.Method)
+		}
+
+		w.Header().Set("Content-Type", "text/event-stream")
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("Connection", "keep-alive")
+
+		flusher, ok := w.(http.Flusher)
+		if !ok {
+			t.Fatal("Expected http.ResponseWriter to support flushing")
+		}
+
+		// Send multiple chunks
+		chunks := []string{"Hello", " ", "world", "!"}
+		for i, text := range chunks {
+			chunk := ChatCompletionStreamResponse{
+				ID:      "chatcmpl-123",
+				Object:  "chat.completion.chunk",
+				Created: time.Now().Unix(),
+				Model:   "gpt-4",
+				Choices: []Choice{
+					{
+						Index: 0,
+						Delta: &ChatMessage{
+							Role:    "assistant",
+							Content: text,
+						},
+						FinishReason: "",
+					},
+				},
+			}
+
+			// Last chunk has finish_reason
+			if i == len(chunks)-1 {
+				chunk.Choices[0].FinishReason = "stop"
+			}
+
+			data, _ := json.Marshal(chunk)
+			fmt.Fprintf(w, "data: %s\n\n", data)
+			flusher.Flush()
+		}
+
+		// Send [DONE] message
+		fmt.Fprintf(w, "data: [DONE]\n\n")
+		flusher.Flush()
+	}))
+	defer server.Close()
+
+	client := New(
+		WithAPIKey("test-key"),
+		WithBaseURL(server.URL),
+	)
+
+	messages := []core.Message{
+		{Role: "user", Content: "Hello"},
+	}
+
+	ctx := context.Background()
+	stream, err := client.ChatStream(ctx, messages)
+	if err != nil {
+		t.Fatalf("ChatStream failed: %v", err)
+	}
+
+	var chunks []core.StreamChunk
+	var fullContent string
+
+	for chunk := range stream {
+		if chunk.Error != nil {
+			t.Fatalf("Chunk error: %v", chunk.Error)
+		}
+		chunks = append(chunks, chunk)
+		fullContent += chunk.Delta
+	}
+
+	if len(chunks) == 0 {
+		t.Fatal("Expected at least one chunk")
+	}
+
+	if fullContent != "Hello world!" {
+		t.Errorf("Expected content 'Hello world!', got '%s'", fullContent)
+	}
+
+	// Check last chunk has finish reason
+	lastChunk := chunks[len(chunks)-1]
+	if lastChunk.FinishReason != "stop" {
+		t.Errorf("Expected finish_reason 'stop', got '%s'", lastChunk.FinishReason)
+	}
+
+	// Check accumulated content
+	if lastChunk.Content != "Hello world!" {
+		t.Errorf("Expected accumulated content 'Hello world!', got '%s'", lastChunk.Content)
+	}
+}
+
+func TestChatStreamContextCancellation(t *testing.T) {
+	// Mock server with slow streaming
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/event-stream")
+		flusher, _ := w.(http.Flusher)
+
+		// Send first chunk
+		chunk := ChatCompletionStreamResponse{
+			ID:    "chatcmpl-123",
+			Model: "gpt-4",
+			Choices: []Choice{
+				{Delta: &ChatMessage{Content: "Hello"}},
+			},
+		}
+		data, _ := json.Marshal(chunk)
+		fmt.Fprintf(w, "data: %s\n\n", data)
+		flusher.Flush()
+
+		// Simulate delay before next chunk
+		time.Sleep(200 * time.Millisecond)
+
+		// Try to send another chunk (should be cancelled)
+		fmt.Fprintf(w, "data: %s\n\n", data)
+		flusher.Flush()
+	}))
+	defer server.Close()
+
+	client := New(
+		WithAPIKey("test-key"),
+		WithBaseURL(server.URL),
+	)
+
+	messages := []core.Message{
+		{Role: "user", Content: "Test"},
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+	defer cancel()
+
+	stream, err := client.ChatStream(ctx, messages)
+	if err != nil {
+		t.Fatalf("ChatStream failed: %v", err)
+	}
+
+	var chunks []core.StreamChunk
+	for chunk := range stream {
+		chunks = append(chunks, chunk)
+	}
+
+	// Should receive at least one chunk before cancellation
+	if len(chunks) == 0 {
+		t.Error("Expected at least one chunk before cancellation")
+	}
+}
+
+func TestChatStreamError(t *testing.T) {
+	// Mock server that returns an error
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(ErrorResponse{
+			Error: &APIError{
+				Type:    "server_error",
+				Message: "Internal server error",
+			},
+		})
+	}))
+	defer server.Close()
+
+	client := New(
+		WithAPIKey("test-key"),
+		WithBaseURL(server.URL),
+	)
+
+	messages := []core.Message{
+		{Role: "user", Content: "Test"},
+	}
+
+	ctx := context.Background()
+	stream, err := client.ChatStream(ctx, messages)
+	if err != nil {
+		t.Fatalf("ChatStream failed: %v", err)
+	}
+
+	var errorReceived bool
+	for chunk := range stream {
+		if chunk.Error != nil {
+			errorReceived = true
+			if !strings.Contains(chunk.Error.Error(), "server_error") {
+				t.Errorf("Expected error to contain 'server_error', got: %v", chunk.Error)
+			}
+		}
+	}
+
+	if !errorReceived {
+		t.Error("Expected to receive error chunk")
+	}
+}
+
+func TestCompleteStream(t *testing.T) {
+	// Mock SSE streaming response
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/event-stream")
+		flusher, _ := w.(http.Flusher)
+
+		// Send chunks
+		chunks := []string{"The", " answer", " is", " 42"}
+		for _, text := range chunks {
+			chunk := ChatCompletionStreamResponse{
+				ID:    "chatcmpl-123",
+				Model: "gpt-4",
+				Choices: []Choice{
+					{Delta: &ChatMessage{Content: text}},
+				},
+			}
+			data, _ := json.Marshal(chunk)
+			fmt.Fprintf(w, "data: %s\n\n", data)
+			flusher.Flush()
+		}
+
+		fmt.Fprintf(w, "data: [DONE]\n\n")
+		flusher.Flush()
+	}))
+	defer server.Close()
+
+	client := New(
+		WithAPIKey("test-key"),
+		WithBaseURL(server.URL),
+	)
+
+	ctx := context.Background()
+	stream, err := client.CompleteStream(ctx, "What is the answer?")
+	if err != nil {
+		t.Fatalf("CompleteStream failed: %v", err)
+	}
+
+	var fullContent string
+	for chunk := range stream {
+		if chunk.Error != nil {
+			t.Fatalf("Chunk error: %v", chunk.Error)
+		}
+		fullContent += chunk.Delta
+	}
+
+	if fullContent != "The answer is 42" {
+		t.Errorf("Expected content 'The answer is 42', got '%s'", fullContent)
+	}
+}
+
+func TestStreamChunkAccumulation(t *testing.T) {
+	// Test that Content field accumulates properly
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/event-stream")
+		flusher, _ := w.(http.Flusher)
+
+		tokens := []string{"Hello", " ", "streaming", " ", "world"}
+		for _, token := range tokens {
+			chunk := ChatCompletionStreamResponse{
+				ID:    "chatcmpl-123",
+				Model: "gpt-4",
+				Choices: []Choice{
+					{Delta: &ChatMessage{Content: token}},
+				},
+			}
+			data, _ := json.Marshal(chunk)
+			fmt.Fprintf(w, "data: %s\n\n", data)
+			flusher.Flush()
+		}
+
+		fmt.Fprintf(w, "data: [DONE]\n\n")
+		flusher.Flush()
+	}))
+	defer server.Close()
+
+	client := New(
+		WithAPIKey("test-key"),
+		WithBaseURL(server.URL),
+	)
+
+	messages := []core.Message{
+		{Role: "user", Content: "Test"},
+	}
+
+	ctx := context.Background()
+	stream, err := client.ChatStream(ctx, messages)
+	if err != nil {
+		t.Fatalf("ChatStream failed: %v", err)
+	}
+
+	expectedAccumulations := []string{
+		"Hello",
+		"Hello ",
+		"Hello streaming",
+		"Hello streaming ",
+		"Hello streaming world",
+	}
+
+	var i int
+	for chunk := range stream {
+		if chunk.Error != nil {
+			t.Fatalf("Chunk error: %v", chunk.Error)
+		}
+
+		if i < len(expectedAccumulations) {
+			if chunk.Content != expectedAccumulations[i] {
+				t.Errorf("Chunk %d: expected Content '%s', got '%s'",
+					i, expectedAccumulations[i], chunk.Content)
+			}
+		}
+		i++
+	}
+
+	if i != len(expectedAccumulations) {
+		t.Errorf("Expected %d chunks, got %d", len(expectedAccumulations), i)
 	}
 }
