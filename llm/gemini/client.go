@@ -37,6 +37,7 @@
 package gemini
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -44,6 +45,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/yashrahurikar23/goagents/core"
 )
@@ -162,6 +164,212 @@ func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
 	}
 
 	return resp.Content, nil
+}
+
+// ChatStream implements the core.StreamingLLM interface for streaming chat completions.
+//
+// WHY THIS METHOD:
+// - Implements core.StreamingLLM interface for framework compatibility
+// - Returns a channel of core.StreamChunk for real-time token delivery
+// - Handles context cancellation gracefully
+// - Accumulates content across chunks for convenience
+//
+// IMPLEMENTATION:
+// - Uses Gemini's streaming format (newline-delimited JSON)
+// - Converts Gemini responses to core.StreamChunk format
+// - Runs stream processing in a goroutine
+// - Closes channel when stream completes or errors occur
+func (c *Client) ChatStream(ctx context.Context, messages []core.Message, opts ...interface{}) (<-chan core.StreamChunk, error) {
+	if c.apiKey == "" {
+		return nil, fmt.Errorf("API key is required")
+	}
+
+	// Convert messages to Gemini format
+	geminiContents, systemInstruction := c.convertMessages(messages)
+
+	// Build generation config
+	var genConfig *GenerationConfig
+	if c.maxTokens != nil || c.temperature != nil || c.topP != nil || c.topK != nil {
+		genConfig = &GenerationConfig{
+			MaxOutputTokens: c.maxTokens,
+			Temperature:     c.temperature,
+			TopP:            c.topP,
+			TopK:            c.topK,
+		}
+	}
+
+	req := GenerateContentRequest{
+		Contents:          geminiContents,
+		SystemInstruction: systemInstruction,
+		GenerationConfig:  genConfig,
+	}
+
+	// Marshal request body
+	body, err := json.Marshal(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal request: %w", err)
+	}
+
+	// Build URL with streaming endpoint
+	url := fmt.Sprintf("%s/models/%s:streamGenerateContent?key=%s", c.baseURL, c.model, c.apiKey)
+
+	// Create HTTP request
+	httpReq, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(body))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
+
+	httpReq.Header.Set("Content-Type", "application/json")
+
+	// Send request
+	httpResp, err := c.httpClient.Do(httpReq)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute request: %w", err)
+	}
+
+	// Check status code
+	if httpResp.StatusCode != http.StatusOK {
+		httpResp.Body.Close()
+		bodyBytes, _ := io.ReadAll(httpResp.Body)
+		return nil, fmt.Errorf("API error (status %d): %s", httpResp.StatusCode, string(bodyBytes))
+	}
+
+	// Create buffered channel for chunks
+	chunkChan := make(chan core.StreamChunk, 10)
+
+	// Track accumulated content and index
+	var content string
+	index := 0
+
+	// Start goroutine to read streaming response
+	go func() {
+		defer close(chunkChan)
+		defer httpResp.Body.Close()
+
+		scanner := bufio.NewScanner(httpResp.Body)
+		for scanner.Scan() {
+			// Check for context cancellation
+			select {
+			case <-ctx.Done():
+				errorChunk := core.StreamChunk{
+					Content:   content,
+					Index:     index,
+					Error:     ctx.Err(),
+					Timestamp: time.Now(),
+				}
+				select {
+				case chunkChan <- errorChunk:
+				case <-ctx.Done():
+				}
+				return
+			default:
+			}
+
+			line := scanner.Text()
+			if line == "" {
+				continue
+			}
+
+			// Parse the response chunk
+			var resp GenerateContentResponse
+			if err := json.Unmarshal([]byte(line), &resp); err != nil {
+				// Try to parse as error response
+				var errResp ErrorResponse
+				if err := json.Unmarshal([]byte(line), &errResp); err == nil && errResp.Error.Code != 0 {
+					errorChunk := core.StreamChunk{
+						Content:   content,
+						Index:     index,
+						Error:     fmt.Errorf("API error: %s (code: %d)", errResp.Error.Message, errResp.Error.Code),
+						Timestamp: time.Now(),
+					}
+					select {
+					case chunkChan <- errorChunk:
+					case <-ctx.Done():
+					}
+					return
+				}
+				// Ignore other parse errors
+				continue
+			}
+
+			// Extract content from candidates
+			if len(resp.Candidates) == 0 {
+				continue
+			}
+
+			candidate := resp.Candidates[0]
+			
+			// Extract text from content parts
+			var delta string
+			if len(candidate.Content.Parts) > 0 {
+				for _, part := range candidate.Content.Parts {
+					delta += part.Text
+				}
+			}
+
+			if delta != "" {
+				content += delta
+			}
+
+			var finishReason string
+			if candidate.FinishReason != "" && candidate.FinishReason != "FINISH_REASON_UNSPECIFIED" {
+				finishReason = strings.ToLower(candidate.FinishReason)
+			}
+
+			// Create StreamChunk
+			streamChunk := core.StreamChunk{
+				Content:      content,
+				Delta:        delta,
+				Index:        index,
+				FinishReason: finishReason,
+				Metadata: map[string]interface{}{
+					"model": c.model,
+				},
+				Timestamp: time.Now(),
+			}
+
+			index++
+
+			// Send chunk on channel
+			select {
+			case <-ctx.Done():
+				return
+			case chunkChan <- streamChunk:
+			}
+
+			if finishReason != "" {
+				return
+			}
+		}
+
+		if err := scanner.Err(); err != nil {
+			errorChunk := core.StreamChunk{
+				Content:   content,
+				Index:     index,
+				Error:     fmt.Errorf("error reading stream: %w", err),
+				Timestamp: time.Now(),
+			}
+			select {
+			case chunkChan <- errorChunk:
+			case <-ctx.Done():
+			}
+		}
+	}()
+
+	return chunkChan, nil
+}
+
+// CompleteStream implements the core.StreamingLLM interface for streaming completions.
+//
+// WHY THIS METHOD:
+// - Provides simple streaming interface for single-prompt use cases
+// - Wraps prompt as user message and delegates to ChatStream
+// - Maintains consistency with Complete() method signature
+func (c *Client) CompleteStream(ctx context.Context, prompt string, opts ...interface{}) (<-chan core.StreamChunk, error) {
+	messages := []core.Message{
+		{Role: "user", Content: prompt},
+	}
+	return c.ChatStream(ctx, messages, opts...)
 }
 
 // doRequest makes the HTTP request to the Gemini API.

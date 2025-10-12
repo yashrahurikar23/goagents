@@ -36,6 +36,7 @@
 package anthropic
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -43,6 +44,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/yashrahurikar23/goagents/core"
 )
@@ -152,6 +154,206 @@ func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
 	}
 
 	return resp.Content, nil
+}
+
+// ChatStream implements the core.StreamingLLM interface for streaming chat completions.
+//
+// WHY THIS METHOD:
+// - Implements core.StreamingLLM interface for framework compatibility
+// - Returns a channel of core.StreamChunk for real-time token delivery
+// - Handles context cancellation gracefully
+// - Accumulates content across chunks for convenience
+//
+// IMPLEMENTATION:
+// - Uses Anthropic's SSE streaming format
+// - Converts Anthropic events to core.StreamChunk format
+// - Runs stream processing in a goroutine
+// - Closes channel when stream completes or errors occur
+func (c *Client) ChatStream(ctx context.Context, messages []core.Message, opts ...interface{}) (<-chan core.StreamChunk, error) {
+	if c.apiKey == "" {
+		return nil, fmt.Errorf("API key is required")
+	}
+
+	// Convert messages to Anthropic format
+	anthropicMessages, systemPrompt := c.convertMessages(messages)
+
+	// Build generation config with streaming enabled
+	genConfig := Request{
+		Model:       c.model,
+		Messages:    anthropicMessages,
+		MaxTokens:   c.maxTokens,
+		Stream:      true,
+		System:      systemPrompt,
+		Temperature: c.temperature,
+		TopP:        c.topP,
+		TopK:        c.topK,
+	}
+
+	// Marshal request body
+	body, err := json.Marshal(genConfig)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal request: %w", err)
+	}
+
+	// Create HTTP request
+	httpReq, err := http.NewRequestWithContext(ctx, "POST", c.baseURL+"/messages", bytes.NewReader(body))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
+
+	httpReq.Header.Set("Content-Type", "application/json")
+	httpReq.Header.Set("x-api-key", c.apiKey)
+	httpReq.Header.Set("anthropic-version", c.apiVersion)
+
+	// Send request
+	httpResp, err := c.httpClient.Do(httpReq)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute request: %w", err)
+	}
+
+	// Check status code
+	if httpResp.StatusCode != http.StatusOK {
+		httpResp.Body.Close()
+		bodyBytes, _ := io.ReadAll(httpResp.Body)
+		return nil, fmt.Errorf("API error (status %d): %s", httpResp.StatusCode, string(bodyBytes))
+	}
+
+	// Create buffered channel for chunks
+	chunkChan := make(chan core.StreamChunk, 10)
+
+	// Track accumulated content and index
+	var content string
+	index := 0
+
+	// Start goroutine to read streaming response
+	go func() {
+		defer close(chunkChan)
+		defer httpResp.Body.Close()
+
+		scanner := bufio.NewScanner(httpResp.Body)
+		for scanner.Scan() {
+			// Check for context cancellation
+			select {
+			case <-ctx.Done():
+				errorChunk := core.StreamChunk{
+					Content:   content,
+					Index:     index,
+					Error:     ctx.Err(),
+					Timestamp: time.Now(),
+				}
+				select {
+				case chunkChan <- errorChunk:
+				case <-ctx.Done():
+				}
+				return
+			default:
+			}
+
+			line := scanner.Text()
+			if line == "" {
+				continue
+			}
+
+			// Anthropic SSE format: "event: <type>" followed by "data: <json>"
+			if strings.HasPrefix(line, "event: ") {
+				continue // Skip event type lines
+			}
+
+			if !strings.HasPrefix(line, "data: ") {
+				continue
+			}
+
+			data := strings.TrimPrefix(line, "data: ")
+
+			// Parse the event
+			var event struct {
+				Type  string `json:"type"`
+				Delta struct {
+					Type string `json:"type"`
+					Text string `json:"text"`
+				} `json:"delta"`
+				ContentBlock struct {
+					Type string `json:"type"`
+					Text string `json:"text"`
+				} `json:"content_block"`
+			}
+
+			if err := json.Unmarshal([]byte(data), &event); err != nil {
+				// Ignore parse errors for non-delta events
+				continue
+			}
+
+			var delta string
+			var finishReason string
+
+			switch event.Type {
+			case "content_block_delta":
+				delta = event.Delta.Text
+				content += delta
+			case "message_delta":
+				// Message complete
+				finishReason = "stop"
+			case "message_stop":
+				// Stream complete
+				finishReason = "stop"
+			default:
+				continue
+			}
+
+			// Create StreamChunk
+			streamChunk := core.StreamChunk{
+				Content:      content,
+				Delta:        delta,
+				Index:        index,
+				FinishReason: finishReason,
+				Metadata: map[string]interface{}{
+					"model": c.model,
+				},
+				Timestamp: time.Now(),
+			}
+
+			index++
+
+			// Send chunk on channel
+			select {
+			case <-ctx.Done():
+				return
+			case chunkChan <- streamChunk:
+			}
+
+			if finishReason != "" {
+				return
+			}
+		}
+
+		if err := scanner.Err(); err != nil {
+			errorChunk := core.StreamChunk{
+				Content:   content,
+				Index:     index,
+				Error:     fmt.Errorf("error reading stream: %w", err),
+				Timestamp: time.Now(),
+			}
+			select {
+			case chunkChan <- errorChunk:
+			case <-ctx.Done():
+			}
+		}
+	}()
+
+	return chunkChan, nil
+}
+
+// CompleteStream implements the core.StreamingLLM interface for streaming completions.
+//
+// WHY THIS METHOD:
+// - Provides simple streaming interface for single-prompt use cases
+// - Wraps prompt as user message and delegates to ChatStream
+// - Maintains consistency with Complete() method signature
+func (c *Client) CompleteStream(ctx context.Context, prompt string, opts ...interface{}) (<-chan core.StreamChunk, error) {
+	messages := []core.Message{
+		{Role: "user", Content: prompt},
+	}
+	return c.ChatStream(ctx, messages, opts...)
 }
 
 // doRequest makes the HTTP request to the Anthropic API.
