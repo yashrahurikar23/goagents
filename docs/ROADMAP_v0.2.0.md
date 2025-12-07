@@ -77,8 +77,10 @@ type HTTPTool struct {
 
 ---
 
-#### 1.2 File Operations Tool (2-3 days)
+#### 1.2 File Operations Tool (2-3 days) - ENHANCED! 🆕
 **Why:** Read/write files, essential for data processing
+
+**Inspiration from Roo-Code:** Advanced file editing patterns (see `ROOCODE_INSPIRATION_ANALYSIS.md`)
 
 ```go
 // tools/file.go
@@ -88,13 +90,20 @@ type FileTool struct {
 }
 
 // Operations:
-- Read file
-- Write file
+- Read file (with line ranges)
+- Write file (with streaming)
 - Append to file
 - List directory
 - File exists check
 - Get file info
 ```
+
+**Enhanced Features (from Roo-Code):**
+- ✨ **Fuzzy Search-Replace Editing** - Line-number anchored replacements with Levenshtein matching
+- ✨ **Multi-File Operations** - Read/edit multiple files in one operation
+- ✨ **Line Range Support** - Read specific line ranges (e.g., lines 1-50)
+- ✨ **Diagnostic Tracking** - Compare errors before/after edits
+- ✨ **Error Recovery** - Track consecutive mistakes per file
 
 **Use Cases:**
 - Read configuration files
@@ -580,6 +589,256 @@ Docs:        ██████████████████████�
 - GitHub Actions docs
 - Go testing best practices
 - Coverage tools (codecov, coveralls)
+
+### For Advanced File Editing
+- **Roo-Code Analysis:** See `ROOCODE_INSPIRATION_ANALYSIS.md`
+- Levenshtein distance: `github.com/agnivade/levenshtein`
+- Tree-sitter for parsing: `github.com/smacker/go-tree-sitter`
+- Vector embeddings: `github.com/tmc/langchaingo`
+
+---
+
+## 🦘 Roo-Code Learnings & Inspirations
+
+**NEW SECTION - October 14, 2025**
+
+We analyzed [Roo-Code](https://github.com/RooCodeInc/Roo-Code), a production VS Code extension for AI coding assistance, to extract proven patterns for GoAgents.
+
+### 📚 Comprehensive Analysis
+
+**Full Analysis:** See [`ROOCODE_INSPIRATION_ANALYSIS.md`](/ROOCODE_INSPIRATION_ANALYSIS.md) at workspace root
+
+### 🎯 Top 5 Patterns to Adopt
+
+#### 1. **Fuzzy Search-Replace Editing** ⭐ HIGHEST PRIORITY
+
+**What Roo-Code Does:**
+- Uses line numbers as anchors for search operations
+- Fuzzy matching with Levenshtein distance (handles whitespace differences)
+- Multiple edits in a single operation
+- Middle-out search algorithm for best match
+- Buffer lines for context display
+
+**Why This is Brilliant:**
+- ✅ Handles LLM imperfections (doesn't need exact whitespace match)
+- ✅ Reduces ambiguity with line number hints
+- ✅ More efficient with batch operations
+- ✅ Shows context to user
+
+**For GoAgents:**
+```go
+// tools/file_edit.go
+type SearchReplaceBlock struct {
+    StartLine   int
+    SearchText  string
+    ReplaceText string
+}
+
+type FileEditTool struct {
+    fuzzyThreshold float64 // 0.9 = 10% fuzzy matching
+    bufferLines    int     // Context lines to show
+}
+
+// Use: github.com/agnivade/levenshtein for fuzzy matching
+```
+
+**Impact:** Dramatically improves edit reliability for coding agents
+
+---
+
+#### 2. **Streaming Diff Application** 🎬
+
+**What Roo-Code Does:**
+- Real-time line-by-line streaming
+- Visual feedback with decorations (faded overlay, active line)
+- Non-blocking UI updates
+- Diagnostic comparison before/after edits
+
+**For GoAgents:**
+- Terminal UI with `github.com/charmbracelet/bubbletea`
+- WebSocket server for web UI
+- LSP protocol for editor integration
+
+**Impact:** Better user experience, transparency
+
+---
+
+#### 3. **Vector-Based Code Indexing** 🔍
+
+**What Roo-Code Does:**
+- Semantic search (find by meaning, not keywords)
+- Incremental indexing (only changed files)
+- Cache management with hashing
+- ChromaDB for vector storage
+
+**For GoAgents:**
+```go
+// tools/code_index.go
+type CodeIndex struct {
+    vectorStore VectorStore
+    embedder    Embedder
+    cache       *sync.Map
+}
+
+// Use: github.com/chroma-core/chroma-go
+// Use: github.com/tmc/langchaingo/embeddings
+```
+
+**Impact:** Agent can find relevant code automatically
+
+---
+
+#### 4. **Multi-File Operations** 📚
+
+**What Roo-Code Does:**
+- Read/edit multiple files in ONE tool call
+- Reduces API costs
+- Better context for LLM
+- Batch approval UI
+
+**For GoAgents:**
+```go
+type FileOperation struct {
+    Path       string
+    LineRanges []LineRange // Optional
+}
+
+func (t *MultiFileReadTool) Execute(files []FileOperation) map[string]string
+```
+
+**Impact:** Efficiency, reduced API calls
+
+---
+
+#### 5. **Intelligent Error Recovery** 🛡️
+
+**What Roo-Code Does:**
+- Tracks consecutive mistakes per file
+- Shows detailed errors after 2+ failures
+- Compares diagnostics (compile/lint) before/after
+- Auto-retry with better context
+
+**For GoAgents:**
+```go
+type ErrorRecovery struct {
+    mistakesByFile map[string]int
+}
+
+func (a *CodingAgent) ApplyEdit(file string, edit Edit) error {
+    preErrors := a.lintFile(file)
+    // Apply edit
+    postErrors := a.lintFile(file)
+    newErrors := diffErrors(preErrors, postErrors)
+    if len(newErrors) > 0 {
+        return a.fixErrors(file, newErrors)
+    }
+}
+```
+
+**Impact:** Self-healing agents, better reliability
+
+---
+
+### 📦 Required Go Libraries
+
+```bash
+# Fuzzy matching & diffs
+go get github.com/agnivade/levenshtein
+go get github.com/sergi/go-diff
+
+# Vector search & embeddings
+go get github.com/chroma-core/chroma-go
+go get github.com/tmc/langchaingo
+
+# Code analysis
+go get github.com/smacker/go-tree-sitter
+go get golang.org/x/tools/go/analysis
+
+# Terminal UI
+go get github.com/charmbracelet/bubbletea
+go get github.com/charmbracelet/lipgloss
+```
+
+---
+
+### 🎯 Implementation Priority
+
+**Phase 1: File Editing (Week 1-2)** 🔥 CRITICAL
+1. Implement fuzzy search-replace
+2. Add line number support
+3. Support multiple edits per operation
+4. Add error recovery tracking
+
+**Phase 2: Code Indexing (Week 3-4)** 🔥 HIGH VALUE
+1. Vector-based indexing
+2. Semantic search
+3. Cache management
+4. Incremental updates
+
+**Phase 3: Multi-File Ops (Week 5)** 💡 EFFICIENCY
+1. Multi-file read tool
+2. Batch edit operations
+3. Batch approval UI
+
+**Phase 4: Streaming UI (Week 6)** ✨ UX POLISH
+1. Terminal streaming diff view
+2. Progress indicators
+3. Non-blocking updates
+
+---
+
+### 💡 Key Takeaways
+
+**What Makes Roo-Code's Approach Superior:**
+1. **Fuzzy Matching** - Handles LLM imperfections gracefully
+2. **Line Numbers as Anchors** - Reduces search ambiguity
+3. **Visual Feedback** - User sees changes in real-time
+4. **Diagnostic Integration** - Catches errors immediately
+5. **Error Recovery** - Learns from mistakes
+
+**Directly Portable to Go:**
+- ✅ Search-replace format with line numbers
+- ✅ Fuzzy matching algorithm (Levenshtein)
+- ✅ Multi-file operation pattern
+- ✅ Error tracking architecture
+- ✅ Diagnostic comparison logic
+
+**Needs Adaptation:**
+- ⚠️ VS Code API → Terminal UI or WebSockets
+- ⚠️ TypeScript types → Go interfaces
+- ⚠️ Node.js libs → Go ecosystem
+
+---
+
+### 🚀 Action Items for v0.2.0+
+
+**Immediate (v0.2.0):**
+- [ ] Add fuzzy search-replace to File Operations tool
+- [ ] Implement line number support
+- [ ] Add multi-file read capability
+- [ ] Document patterns in tool README
+
+**Near-term (v0.3.0):**
+- [ ] Implement code indexing tool
+- [ ] Add semantic search
+- [ ] Create streaming diff viewer (terminal)
+- [ ] Add error recovery to agents
+
+**Future (v0.4.0+):**
+- [ ] Full vector database integration
+- [ ] LSP protocol support
+- [ ] Web-based UI option
+- [ ] Advanced diagnostic integration
+
+---
+
+### 📖 Learn More
+
+- **Full Analysis:** [`ROOCODE_INSPIRATION_ANALYSIS.md`](/ROOCODE_INSPIRATION_ANALYSIS.md)
+- **Roo-Code Repo:** https://github.com/RooCodeInc/Roo-Code
+- **Go Levenshtein:** https://github.com/agnivade/levenshtein
+- **ChromaDB:** https://docs.trychroma.com/
+- **Bubbletea TUI:** https://github.com/charmbracelet/bubbletea
 
 ---
 

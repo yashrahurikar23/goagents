@@ -188,6 +188,52 @@ docs/
 
 ---
 
+#### [guides/ROOCODE_LEARNINGS.md](guides/ROOCODE_LEARNINGS.md) 🆕
+### **ROOCODE_ANALYSIS_SUMMARY.md** ([View](ROOCODE_ANALYSIS_SUMMARY.md))
+**Purpose:** Quick reference summary connecting all Roo-Code analysis documentation - a "table of contents" for the learnings.
+
+**Contains:**
+- Links to all 3 created documents (technical analysis, learnings guide, updated docs)
+- Top 5 patterns with quick reference (priority, impact, status)
+- Required libraries by phase
+- Implementation timeline with priorities
+- Expected benefits (quantitative and qualitative)
+- Key learnings and principles
+- Status tracking (completed, in progress, next steps)
+- Quick links section for navigation
+
+**Read when:** You need to quickly navigate the Roo-Code analysis, want a high-level overview before diving deep, need to check implementation status, or looking for specific pattern documentation.
+
+**Audience:** All contributors, project managers, new team members getting oriented, anyone needing quick access to the analysis ecosystem.
+
+**Related:** Start here for navigation, then dive into specific documents based on your needs (technical details, high-level overview, or roadmap integration).
+
+---
+
+### **ROOCODE_LEARNINGS.md** ([View](guides/ROOCODE_LEARNINGS.md))
+**Purpose:** High-level overview of patterns and insights learned from analyzing Roo-Code VS Code extension for file editing, code indexing, and AI agent workflows.
+
+**Contains:**
+- Top 5 patterns to adopt (fuzzy search-replace, multi-file operations, vector indexing, error recovery, streaming)
+- Go implementation examples for each pattern
+- Required libraries and dependencies
+- 4-phase implementation roadmap (v0.2.0-v0.4.0+)
+- Core principles for adaptation
+- Benefits analysis (proven patterns, faster development, avoid pitfalls)
+- Success metrics (quantitative and qualitative)
+- Key learnings from production system
+- Implementation priorities
+- Resource links
+- Visual diagrams of key concepts
+
+**Read when:** You want to understand production-proven patterns for AI coding agents, need guidance on implementing robust file editing or code indexing features, or want to see how to adapt TypeScript patterns to Go idioms.
+
+**Audience:** Contributors implementing file tools, code indexing, or agent workflows; architects making design decisions; developers seeking proven patterns from production systems.
+
+**Related:** See [ROOCODE_INSPIRATION_ANALYSIS.md](/ROOCODE_INSPIRATION_ANALYSIS.md) at workspace root for full technical analysis with detailed TypeScript examples and step-by-step migration guide.
+
+---
+
 ### Testing Documentation
 
 #### [guides/TESTING_STRATEGY.md](guides/TESTING_STRATEGY.md)

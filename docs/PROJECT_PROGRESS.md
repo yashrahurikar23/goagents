@@ -142,7 +142,7 @@
   - ✅ Example implementation
   - ✅ Documentation
 
-- ✅ **File Operations Tool** (NEW! v0.3.0) ✅
+- ✅ **File Operations Tool** (NEW! v0.3.0) ✅ 🦘 INSPIRED BY ROO-CODE
   - ✅ Read/write/append operations
   - ✅ Directory listing
   - ✅ File existence checks
@@ -155,6 +155,22 @@
   - ✅ 21 comprehensive tests
   - ✅ Example with 8 scenarios
   - ✅ Comprehensive README
+  - 🆕 **Planned Enhancements (from Roo-Code Analysis):**
+    - ⏳ Fuzzy search-replace editing (Levenshtein distance)
+    - ⏳ Line number anchored operations
+    - ⏳ Multi-file batch read/write
+    - ⏳ Line range support (read lines 1-50)
+    - ⏳ Diagnostic tracking (errors before/after)
+    - ⏳ Error recovery per file
+    - ⏳ Streaming diff application
+
+- ⏳ **Code Indexing Tool** (v0.3.0) 🆕 FROM ROO-CODE ANALYSIS
+  - ⏳ Vector-based semantic search
+  - ⏳ ChromaDB integration
+  - ⏳ Incremental indexing
+  - ⏳ Cache management
+  - ⏳ Find code by meaning not keywords
+  - ⏳ Automatic context retrieval
 
 - ⏳ **Web Search Tool** (v0.3.0)
   - ⏳ DuckDuckGo integration
@@ -585,10 +601,105 @@ CI/CD:              ███░░░░░░░ 30%
 3. Comprehensive docs are essential from day one
 4. Test-driven development pays off
 5. Community feedback is invaluable
+6. 🆕 **Learning from production systems (Roo-Code) accelerates development**
 
 ---
 
-**Last Updated:** October 8, 2025  
+## 🦘 Roo-Code Analysis & Learnings
+
+**Added:** October 14, 2025
+
+### Overview
+
+We conducted a comprehensive analysis of [Roo-Code](https://github.com/RooCodeInc/Roo-Code), a production VS Code extension for AI coding assistance with real users. The goal: extract proven patterns and adapt them for GoAgents.
+
+**Full Analysis:** [`ROOCODE_INSPIRATION_ANALYSIS.md`](/ROOCODE_INSPIRATION_ANALYSIS.md)
+
+### Key Insights Extracted
+
+#### 1. Fuzzy Search-Replace Editing ⭐ HIGHEST IMPACT
+- **Problem:** LLMs don't always match whitespace/formatting exactly
+- **Solution:** Levenshtein distance for fuzzy matching (90%+ similarity threshold)
+- **Implementation:** Line numbers as anchors + middle-out search algorithm
+- **Go Library:** `github.com/agnivade/levenshtein`
+- **Impact:** Dramatically improves file edit reliability
+
+#### 2. Multi-File Operations 📚
+- **Problem:** Multiple API calls for related files
+- **Solution:** Batch read/write operations in single tool call
+- **Features:** Line range support, multiple file specs
+- **Impact:** Reduced API costs, better context for LLM
+
+#### 3. Vector-Based Code Indexing 🔍
+- **Problem:** Finding relevant code by keywords alone is limited
+- **Solution:** Semantic search using vector embeddings
+- **Technology:** ChromaDB + embeddings (OpenAI/local)
+- **Go Libraries:** `github.com/chroma-core/chroma-go`, `github.com/tmc/langchaingo`
+- **Impact:** Agent can find code by meaning, not just syntax
+
+#### 4. Intelligent Error Recovery 🛡️
+- **Problem:** Agents repeat mistakes
+- **Solution:** Track mistakes per file, provide better context after 2+ failures
+- **Features:** Diagnostic comparison (before/after), auto-retry with enhanced errors
+- **Impact:** Self-healing agents, reduced failures
+
+#### 5. Streaming Diff Application 🎬
+- **Problem:** Users don't trust invisible edits
+- **Solution:** Real-time line-by-line streaming with visual feedback
+- **For Go:** Terminal UI (bubbletea) or WebSocket server
+- **Impact:** Better UX, builds trust
+
+### Integration Plan
+
+**v0.2.0+ (Immediate):**
+- ✅ Enhanced file operations with fuzzy matching
+- ✅ Multi-file read capability
+- ✅ Line range support
+- ✅ Error recovery tracking
+
+**v0.3.0 (Next 4-6 weeks):**
+- ⏳ Code indexing tool with vector search
+- ⏳ Semantic code search
+- ⏳ Diagnostic tracking
+- ⏳ Streaming diff viewer (terminal)
+
+**v0.4.0+ (Future):**
+- ⏳ Full vector database integration
+- ⏳ LSP protocol support
+- ⏳ Web-based UI option
+- ⏳ Advanced streaming features
+
+### Required Go Libraries
+
+```bash
+# Already using:
+# - Standard library for file ops
+# - go/parser for Go code analysis
+
+# New additions:
+go get github.com/agnivade/levenshtein       # Fuzzy matching
+go get github.com/sergi/go-diff              # Diff generation
+go get github.com/chroma-core/chroma-go      # Vector DB
+go get github.com/tmc/langchaingo            # Embeddings
+go get github.com/smacker/go-tree-sitter     # Code parsing
+go get github.com/charmbracelet/bubbletea   # Terminal UI
+```
+
+### Benefits to GoAgents
+
+1. **Proven Patterns** - Battle-tested in production with real users
+2. **Avoid Pitfalls** - Learn from Roo-Code's iterations
+3. **Faster Development** - Don't reinvent the wheel
+4. **Better UX** - Adopt what works for users
+5. **Go Advantage** - Port TypeScript patterns with Go's performance
+
+### Community Contribution
+
+We're documenting these learnings to help the entire Go AI agent community. See our comprehensive analysis document for implementation details, code examples, and library recommendations.
+
+---
+
+**Last Updated:** October 14, 2025  
 **Next Update:** After v0.3.0 release  
 **Tracking:** Real-time updates in this document
 
